@@ -1,0 +1,87 @@
+name: Publish sshhub
+
+on:
+  release:
+    types:
+      - created
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 10.0.x
+
+      - name: Ensure zip is installed
+        shell: bash
+        run: |
+          set -e
+          if ! command -v zip >/dev/null 2>&1; then
+            sudo apt-get update
+            sudo apt-get install -y zip
+          fi
+
+      - name: Restore
+        run: dotnet restore
+
+      - name: Prepare publish directory
+        run: |
+          rm -rf publish
+          mkdir -p publish
+
+      - name: Publish all runtimes
+        shell: bash
+        run: |
+          set -e
+
+          RP () {
+            echo "=== Publishing $1 ==="
+
+            pushd sshhub >/dev/null
+
+            rm -rf bin
+            mkdir -p bin
+
+            dotnet publish -c Release -r "$1" -f net10.0 \
+              --self-contained true \
+              -p:PublishTrimmed=true \
+              -p:AssemblyName=sshhub_"$1" \
+              -p:PublishSingleFile=true \
+              -p:PublishReadyToRun=true \
+              -p:PublishDir=bin
+
+            echo "--- bin contents ($1) ---"
+            ls -la bin
+
+            if [ -z "$(ls -A bin)" ]; then
+              echo "bin is empty for $1"
+              exit 1
+            fi
+            
+            rm -rd bin/Release/
+
+            zip -r "../publish/sshhub_${{ github.event.release.tag_name }}_${1}.zip" bin
+
+            popd >/dev/null
+          }
+
+          RP win-x64
+          RP win-x86
+          RP win-arm64
+          RP linux-x64
+          RP linux-arm
+          RP linux-arm64
+
+      - name: Upload assets to Release (on release)
+        if: github.event_name == 'release'
+        uses: softprops/action-gh-release@v2
+        with:
+          files: publish/*
