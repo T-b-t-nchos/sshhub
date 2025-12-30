@@ -272,7 +272,7 @@ namespace sshhub
             );
             if (newIP == null)
                 return null;
-            else if (newName != string.Empty)
+            else if (newIP != string.Empty)
                 target.IP = newIP;
 
 
