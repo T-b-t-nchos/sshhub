@@ -1,4 +1,4 @@
-﻿using System.Text.Json;
+using System.Text.Json;
 using System.Text.Json.Serialization;
 
 namespace sshhub
@@ -172,6 +172,13 @@ namespace sshhub
             }
         }
 
+        /// <summary>
+        /// Displays an interactive menu of configured targets and lets the user choose one.
+        /// </summary>
+        /// <param name="config">The configuration containing the available targets.</param>
+        /// <param name="infoMsg">Header text shown above the menu to provide context to the user.</param>
+        /// <param name="toptext">Prefix text added to each menu entry before the target details.</param>
+        /// <returns>The chosen <see cref="TargetConfig"/>, or <c>null</c> if the user cancels the selection or no targets are available.</returns>
         public static TargetConfig? SelectTarget(ConfigRoot config, string infoMsg, string toptext)
         {
             Console.Clear();
