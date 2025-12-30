@@ -36,17 +36,7 @@ namespace sshhub
                 }
             }
 
-            public static int? Int(string prompt, bool checkEmpty)
-            {
-                return Int(prompt: prompt, checkEmpty: checkEmpty, defaultValue: -1);
-            }
-
             public static int? Int(string prompt, int defaultValue)
-            {
-                return Int(prompt: prompt, checkEmpty: true, defaultValue: defaultValue);
-            }
-
-            static int? Int(string prompt, bool checkEmpty, int defaultValue)
             {
                 while (true)
                 {
@@ -58,9 +48,6 @@ namespace sshhub
                         return null;
 
                     if (int.TryParse(input, out int result) && !string.IsNullOrWhiteSpace(input))
-                        return result;
-
-                    else if (!checkEmpty)
                         return result;
 
                     else if (defaultValue != -1)
@@ -237,7 +224,7 @@ namespace sshhub
 
             while (true)
             {
-                int? newId = Ask.Int(isNew ? "Enter Target ID" : $"Current ID ({target.id})", checkEmpty: isNew);
+                int? newId = Ask.Int(isNew ? "Enter Target ID" : $"Current ID ({target.id})", isNew ? -1 : target.id);
 
                 if (newId == null)
                     return null;
@@ -279,7 +266,7 @@ namespace sshhub
 
             int? newPort = Ask.Int(
                 isNew ? "Enter Target Port (default 22)" : $"Current Port ({target.Port})",
-                defaultValue: 22
+                isNew ? 22 : target.Port
             );
             if (newPort == null)
                 return null;
