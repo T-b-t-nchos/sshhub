@@ -1,5 +1,5 @@
 # sshhub
-[English](README.md) | [“ú–{Œê](README.ja.md)
+[English](README.md) | [日本語](README.ja.md)
 ## A simple SSH connection manager
 sshhub is a CLI tool to easily multiple SSH connections.
 
