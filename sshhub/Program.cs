@@ -76,7 +76,7 @@ namespace sshhub
         {
             Console.Clear();
 
-            TargetConfig? target = SelectTarget(Config, "Select Target to Connect", "\e[92m");
+            TargetConfig? target = SelectTarget(Config, "Select Target to Connect", "\e[92m", true);
             if (target == null)
             {
                 ShowMenu();
@@ -202,7 +202,7 @@ namespace sshhub
         {
             Console.Clear();
 
-            TargetConfig? target = SelectTarget(Config, "Select Target to edit", "\e[93m");
+            TargetConfig? target = SelectTarget(Config, "Select Target to edit", "\e[93m", false);
             if (target == null)
             {
                 ShowMenu();
@@ -232,7 +232,7 @@ namespace sshhub
         {
             Console.Clear();
 
-            TargetConfig? target = SelectTarget(Config, "Select Target to Delete", "\e[95m");
+            TargetConfig? target = SelectTarget(Config, "Select Target to Delete", "\e[95m", false);
             if (target == null)
             {
                 ShowMenu();

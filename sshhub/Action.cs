@@ -1,4 +1,5 @@
-﻿using System.Text.Json;
+﻿using System.Net.Sockets;
+using System.Text.Json;
 using System.Text.Json.Serialization;
 
 namespace sshhub
@@ -55,6 +56,30 @@ namespace sshhub
 
 
                     WriteLine.Error("Invalid integer. Please try again. (Cancel to \"!cancel\" or \"!CANCEL\")");
+                }
+            }
+
+            public static bool? Bool(string prompt, bool? defaultValue)
+            {
+                while (true)
+                {
+                    Console.Write($"{prompt} (y/n) >> ");
+
+                    string input = Console.ReadLine() ?? string.Empty;
+
+                    if (input.Equals("!cancel", StringComparison.CurrentCultureIgnoreCase))
+                        return null;
+
+                    if (input.Equals("y", StringComparison.CurrentCultureIgnoreCase))
+                        return true;
+
+                    else if (input.Equals("n", StringComparison.CurrentCultureIgnoreCase))
+                        return false;
+
+                    else if (input.Trim() == string.Empty && defaultValue != null)
+                        return defaultValue;
+
+                    WriteLine.Error("Invalid input. Please enter 'y' or 'n'. (Cancel to \"!cancel\" or \"!CANCEL\")");
                 }
             }
         }
@@ -174,14 +199,37 @@ namespace sshhub
             }
         }
 
+        public class TCP
+        {
+            public static async Task<bool> CanConnectAsync(
+                string host,
+                int port = 22,
+                int timeoutMs = 300)
+            {
+                using var client = new TcpClient();
+                using var cts = new CancellationTokenSource(timeoutMs);
+
+                try
+                {
+                    await client.ConnectAsync(host, port, cts.Token);
+                    return true;
+                }
+                catch
+                {
+                    return false;
+                }
+            }
+        }
+
         /// <summary>
         /// Displays an interactive menu of configured targets and lets the user choose one.
         /// </summary>
         /// <param name="config">The configuration containing the available targets.</param>
         /// <param name="infoMsg">Header text shown above the menu to provide context to the user.</param>
         /// <param name="toptext">Prefix text added to each menu entry before the target details.</param>
+        /// <param name="scanOnline">If true, the method checks the online status of each target.</param>
         /// <returns>The chosen <see cref="TargetConfig"/>, or <c>null</c> if the user cancels the selection or no targets are available.</returns>
-        public static TargetConfig? SelectTarget(ConfigRoot config, string infoMsg, string toptext)
+        public static TargetConfig? SelectTarget(ConfigRoot config, string infoMsg, string toptext, bool scanOnline)
         {
             Console.Clear();
 
@@ -201,14 +249,26 @@ namespace sshhub
             foreach (var t in config.Targets)
             {
                 Array.Resize(ref items, items.Length + 1);
-                items[^1] = toptext + "$ " + $"ID: {t.id}, Name: {t.Name}, IP: {t.IP}, Port: {t.Port}, Username: {t.Username}";
+
+                bool doScanOnline = scanOnline && t.ScanOnline;
+                bool isOnline = false;
+                string status = string.Empty;
+                string statusColor = string.Empty;
+                if (doScanOnline)
+                {
+                    isOnline = TCP.CanConnectAsync(t.IP, t.Port).GetAwaiter().GetResult();
+                    status = isOnline ? "Online" : "Offline";
+                    statusColor = !isOnline ? "\e[91m" : "";
+                }
+                items[^1] = toptext + statusColor + "$ " + 
+                    $"ID: {t.id}, Name: {t.Name}, IP: {t.IP}, Port: {t.Port}, Username: {t.Username}{(doScanOnline ? $", {status}" : "")}";
             }
 
             int selected = WriteLine.SelectableMenu(items, 2, true);
 
             if (selected + 1 > config.Targets.Length)
             {
-                return SelectTarget(config, infoMsg, toptext);
+                return SelectTarget(config, infoMsg, toptext, scanOnline);
             }
             if (selected == -1)
             {
@@ -283,6 +343,15 @@ namespace sshhub
                 target.Username = newUsername;
 
 
+            bool? newScanOnline = Ask.Bool(
+                isNew ? "Scan Online Status?" : $"Current Scan Online Status ({(target.ScanOnline ? "y" : "n")})",
+                isNew ? null : target.ScanOnline
+            );
+            if (newScanOnline == null)
+                return null;
+            target.ScanOnline = (bool)newScanOnline;
+
+
             return target;
         }
 
@@ -332,7 +401,7 @@ namespace sshhub
             foreach (var t in targets)
             {
                 Console.WriteLine(
-                    $"ID: {t.id}, Name: {t.Name}, IP: {t.IP}, Port: {t.Port}, Username: {t.Username}"
+                    $"ID: {t.id}, Name: {t.Name}, IP: {t.IP}, Port: {t.Port}, Username: {t.Username}, ScanOnline: {t.ScanOnline}"
                 );
             }
         }
