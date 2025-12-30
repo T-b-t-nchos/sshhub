@@ -45,10 +45,10 @@ namespace sshhub
                 "\e[93m" + "$ " + "4. Edit Target",
                 "\e[95m" + "$ " + "5. Delete Target",
                 "\e[95m" + "$ " + "6. Edit Execution Option",
-                "\e[91m" + "$ " + "0. Exit"
+                "\e[91m" + "$ " + "7. Exit"
             ];
 
-            int selected = SelectableMenu(menuItems, 4, false);
+            int selected = SelectableMenu(menuItems, 4, true);
             if (selected == -1)
             {
                 ConfirmExit();
