@@ -378,7 +378,7 @@ namespace sshhub
                     {
                         case 0:
                             {
-                                int? newId = ConfigAsk.ID(newTarget, allTargets, false);
+                                int? newId = ConfigAsk.ID(newTarget, allTargets, false, target.id);
                                 if (newId == null)
                                     break;
                                 newTarget.id = (int)newId;
@@ -439,7 +439,7 @@ namespace sshhub
 
             class ConfigAsk
             {
-                internal static int? ID(TargetConfig target, TargetConfig[] allTargets, bool isNew)
+                internal static int? ID(TargetConfig target, TargetConfig[] allTargets, bool isNew, int? originalId = null)
                 {
                     while (true)
                     {
@@ -447,9 +447,11 @@ namespace sshhub
 
                         if (newId == null)
                             return null;
+                        
+                        int excludeId = originalId ?? (isNew ? int.MinValue : target.id);
 
                         bool duplicate = allTargets
-                            .Where(t => !ReferenceEquals(t, target))
+                            .Where(t => t.id != excludeId)
                             .Any(t => t.id == newId);
 
                         if (duplicate)
