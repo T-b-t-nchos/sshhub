@@ -36,7 +36,17 @@ namespace sshhub
                 }
             }
 
+            public static int Int(string prompt, bool checkEmpty)
+            {
+                return Int(prompt: prompt, checkEmpty: checkEmpty, defaultValue: -1);
+            }
+
             public static int Int(string prompt, int defaultValue)
+            {
+                return Int(prompt: prompt, checkEmpty: true, defaultValue: defaultValue);
+            }
+
+            static int Int(string prompt, bool checkEmpty, int defaultValue)
             {
                 while (true)
                 {
@@ -47,10 +57,13 @@ namespace sshhub
                     if (input.Equals("!cancel", StringComparison.CurrentCultureIgnoreCase))
                         return -1;
 
-                    if (string.IsNullOrEmpty(input))
+                    if (int.TryParse(input, out int result) && !string.IsNullOrWhiteSpace(input))
+                        return result;
+
+                    else if (defaultValue != -1)
                         return defaultValue;
 
-                    if (int.TryParse(input, out int result))
+                    else if (!checkEmpty)
                         return result;
 
                     WriteLine.Error("Invalid integer. Please try again. (Cancel to \"!cancel\" or \"!CANCEL\")");
@@ -223,7 +236,7 @@ namespace sshhub
 
             while (true)
             {
-                int newId = Ask.Int(isNew ? "Enter Target ID" : $"Current ID ({target.id})", target.id);
+                int newId = Ask.Int(isNew ? "Enter Target ID" : $"Current ID ({target.id})", checkEmpty: isNew);
 
                 if (newId == -1)
                     return null;
@@ -264,7 +277,7 @@ namespace sshhub
 
             int newPort = Ask.Int(
                 isNew ? "Enter Target Port (default 22)" : $"Current Port ({target.Port})",
-                target.Port
+                defaultValue: 22
             );
             if (newPort == -1)
                 return null;
