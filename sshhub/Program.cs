@@ -188,14 +188,6 @@ namespace sshhub
                 return;
             }
 
-            if (target == null)
-            {
-                Error("Target not found.");
-                Console.ReadKey(true);
-                ShowMenu();
-                return;
-            }
-
             EditTargetConfig(
                 target,
                 Config.Targets,
