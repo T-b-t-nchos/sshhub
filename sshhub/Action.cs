@@ -23,16 +23,16 @@ namespace sshhub
                     Console.Write($"{prompt} >> ");
                     string input = Console.ReadLine() ?? string.Empty;
 
+                    if (input.Equals("!cancel", StringComparison.CurrentCultureIgnoreCase))
+                        return null;
+
                     if (!string.IsNullOrWhiteSpace(input))
                         return input;
 
                     else if (!checkEmpty)
                         return input;
 
-                    else if (input.Equals("!Cancel", StringComparison.CurrentCultureIgnoreCase))
-                        return null;
-
-                    WriteLine.Error("Input cannot be empty. Please try again. (Cancel to \"!Cancel\")");
+                    WriteLine.Error("Input cannot be empty. Please try again. (Cancel to \"!cancel\" or \"!CANCEL\")");
                 }
             }
 
@@ -44,15 +44,16 @@ namespace sshhub
 
                     string input = Console.ReadLine() ?? string.Empty;
 
+                    if (input.Equals("!cancel", StringComparison.CurrentCultureIgnoreCase))
+                        return -1;
+
                     if (string.IsNullOrEmpty(input))
                         return defaultValue;
 
                     if (int.TryParse(input, out int result))
                         return result;
-                    else if (input.Equals("!Cancel", StringComparison.CurrentCultureIgnoreCase))
-                        return -1;
 
-                    WriteLine.Error("Invalid integer. Please try again. (Cancel to \"!Cancel\")");
+                    WriteLine.Error("Invalid integer. Please try again. (Cancel to \"!cancel\" or \"!CANCEL\")");
                 }
             }
         }
