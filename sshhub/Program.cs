@@ -173,7 +173,7 @@ namespace sshhub
 
             Config = SaveConfig(Config);
 
-            Console.ReadKey();
+            Console.ReadKey(true);
             ShowMenu();
         }
 
@@ -184,14 +184,6 @@ namespace sshhub
             TargetConfig? target = SelectTarget(Config, "Select Target to edit", "\e[93m");
             if (target == null)
             {
-                ShowMenu();
-                return;
-            }
-
-            if (target == null)
-            {
-                Error("Target not found.");
-                Console.ReadKey();
                 ShowMenu();
                 return;
             }
@@ -211,7 +203,7 @@ namespace sshhub
             Config = SaveConfig(Config);
 
             Info("Press Any Key to Back Menu...");
-            Console.ReadKey();
+            Console.ReadKey(true);
             ShowMenu();
         }
 
@@ -264,7 +256,7 @@ namespace sshhub
             Config = SaveConfig(Config);
 
             Info("Press Any Key to Back Menu...");
-            Console.ReadKey();
+            Console.ReadKey(true);
             ShowMenu();
         }
 
