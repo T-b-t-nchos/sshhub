@@ -1,8 +1,8 @@
-# sshhub
-[English](README.md) | [���{��](README.ja.md)
+﻿# sshhub
+[English](README.md) | [日本語](README.ja.md)
 ## A simple SSH connection manager
-sshhub �͕����� SSH �ڑ����ȒP�ɂ��邽�߂� CLI �c�[���ł��B
+sshhub は複数の SSH 接続を簡単にするための CLI ツールです。
 
-���̃A�v���͍ŏ��͎��̂��߂ɍ��܂����B  
-�ł��̂ŁA���Ȃ��̃j�[�Y�ɂ͍���Ȃ���������܂���B
-�ł����A���̃v���W�F�N�g�͂��Ȃ��̍v�������}���܂��̂ŁA����PR������Ă݂Ă�������!
+このアプリは最初は私のために作りました。  
+ですので、あなたのニーズには合わないかもしれません。
+ですが、このプロジェクトはあなたの貢献を歓迎しますので、是非PRを作ってみてください!
