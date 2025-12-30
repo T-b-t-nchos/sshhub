@@ -240,183 +240,186 @@ namespace sshhub
             }
         }
 
-        /// <summary>
-        /// Displays an interactive menu of configured targets and lets the user choose one.
-        /// </summary>
-        /// <param name="config">The configuration containing the available targets.</param>
-        /// <param name="infoMsg">Header text shown above the menu to provide context to the user.</param>
-        /// <param name="toptext">Prefix text added to each menu entry before the target details.</param>
-        /// <param name="scanOnline">If true, the method checks the online status of each target.</param>
-        /// <returns>The chosen <see cref="TargetConfig"/>, or <c>null</c> if the user cancels the selection or no targets are available.</returns>
-        public static TargetConfig? SelectTarget(ConfigRoot config, string infoMsg, string toptext, bool scanOnline)
+        public class Config
         {
-            Console.Clear();
-
-            WriteLine.Info($"{infoMsg} (Press ESC to cancel)");
-            WriteLine.Info("You can choose Up/Down Allow or Number 1to9");
-
-            if (config.Targets.Length == 0)
+            /// <summary>
+            /// Displays an interactive menu of configured targets and lets the user choose one.
+            /// </summary>
+            /// <param name="config">The configuration containing the available targets.</param>
+            /// <param name="infoMsg">Header text shown above the menu to provide context to the user.</param>
+            /// <param name="toptext">Prefix text added to each menu entry before the target details.</param>
+            /// <param name="scanOnline">If true, the method checks the online status of each target.</param>
+            /// <returns>The chosen <see cref="TargetConfig"/>, or <c>null</c> if the user cancels the selection or no targets are available.</returns>
+            public static TargetConfig? SelectTarget(ConfigRoot config, string infoMsg, string toptext, bool scanOnline)
             {
-                WriteLine.Error("\e[7m> No targets available.");
-                Console.WriteLine();
-                WriteLine.Info("Press any key to return to the menu...");
-                Console.ReadKey(true);
-                return null;
-            }
+                Console.Clear();
 
-            if (scanOnline)
-                WriteLine.Info("\e[7m> Scanning online status, please wait...");
+                WriteLine.Info($"{infoMsg} (Press ESC to cancel)");
+                WriteLine.Info("You can choose Up/Down Allow or Number 1to9");
 
-            string[] items = [];
-            foreach (var t in config.Targets)
-            {
-                Array.Resize(ref items, items.Length + 1);
-
-                bool doScanOnline = scanOnline && t.ScanOnline;
-                TCP.TCPState status = TCP.TCPState.None;
-                string statusColor = string.Empty;
-                if (doScanOnline)
+                if (config.Targets.Length == 0)
                 {
-                    status = TCP.CanConnectAsync(t.IP, t.Port).GetAwaiter().GetResult();
-                    statusColor = status switch
-                    {
-                        TCP.TCPState.Offline => "\e[91m",
-                        TCP.TCPState.Error => "\e[31m",
-                        _ => ""
-                    };
-                }
-                items[^1] = toptext + statusColor + "$ " +
-                    $"ID: {t.id}, Name: {t.Name}, {t.Username} @{t.IP} :{t.Port}{(doScanOnline ? $", {status}" : "")}";
-            }
-
-            int selected = WriteLine.SelectableMenu(items, 2, true);
-
-            if (selected + 1 > config.Targets.Length)
-            {
-                return SelectTarget(config, infoMsg, toptext, scanOnline);
-            }
-            if (selected == -1)
-            {
-                return null;
-            }
-
-            return config.Targets[selected];
-        }
-
-        public static TargetConfig? EditTargetConfig(TargetConfig? target, TargetConfig[] allTargets, bool isNew)
-        {
-            target ??= new TargetConfig();
-
-            while (true)
-            {
-                int? newId = Ask.Int(isNew ? "Enter Target ID" : $"Current ID ({target.id})", isNew ? -1 : target.id);
-
-                if (newId == null)
+                    WriteLine.Error("\e[7m> No targets available.");
+                    Console.WriteLine();
+                    WriteLine.Info("Press any key to return to the menu...");
+                    Console.ReadKey(true);
                     return null;
-
-                bool duplicate = allTargets
-                    .Where(t => !ReferenceEquals(t, target))
-                    .Any(t => t.id == newId);
-
-                if (duplicate)
-                {
-                    WriteLine.Error("Duplicate ID.");
-                    continue;
                 }
 
-                target.id = (int)newId;
-                break;
+                if (scanOnline)
+                    WriteLine.Info("\e[7m> Scanning online status, please wait...");
+
+                string[] items = [];
+                foreach (var t in config.Targets)
+                {
+                    Array.Resize(ref items, items.Length + 1);
+
+                    bool doScanOnline = scanOnline && t.ScanOnline;
+                    TCP.TCPState status = TCP.TCPState.None;
+                    string statusColor = string.Empty;
+                    if (doScanOnline)
+                    {
+                        status = TCP.CanConnectAsync(t.IP, t.Port).GetAwaiter().GetResult();
+                        statusColor = status switch
+                        {
+                            TCP.TCPState.Offline => "\e[91m",
+                            TCP.TCPState.Error => "\e[31m",
+                            _ => ""
+                        };
+                    }
+                    items[^1] = toptext + statusColor + "$ " +
+                        $"ID: {t.id}, Name: {t.Name}, {t.Username} @{t.IP} :{t.Port}{(doScanOnline ? $", {status}" : "")}";
+                }
+
+                int selected = WriteLine.SelectableMenu(items, 2, true);
+
+                if (selected + 1 > config.Targets.Length)
+                {
+                    return SelectTarget(config, infoMsg, toptext, scanOnline);
+                }
+                if (selected == -1)
+                {
+                    return null;
+                }
+
+                return config.Targets[selected];
             }
 
+            public static TargetConfig? EditTargetConfig(TargetConfig? target, TargetConfig[] allTargets, bool isNew)
+            {
+                target ??= new TargetConfig();
 
-            string? newName = Ask.String(
-                isNew ? "Enter Target Name" : $"Current Name ({target.Name})",
-                checkEmpty: isNew
-            );
-            if (newName == null)
-                return null;
-            else if (newName != string.Empty)
-                target.Name = newName;
+                while (true)
+                {
+                    int? newId = Ask.Int(isNew ? "Enter Target ID" : $"Current ID ({target.id})", isNew ? -1 : target.id);
 
+                    if (newId == null)
+                        return null;
 
-            string? newIP = Ask.String(
-                isNew ? "Enter Target IP (or HostName)" : $"Current IP ({target.IP})",
-                checkEmpty: isNew
-            );
-            if (newIP == null)
-                return null;
-            else if (newIP != string.Empty)
-                target.IP = newIP;
+                    bool duplicate = allTargets
+                        .Where(t => !ReferenceEquals(t, target))
+                        .Any(t => t.id == newId);
 
+                    if (duplicate)
+                    {
+                        WriteLine.Error("Duplicate ID.");
+                        continue;
+                    }
 
-            int? newPort = Ask.Int(
-                isNew ? "Enter Target Port (default 22)" : $"Current Port ({target.Port})",
-                isNew ? 22 : target.Port
-            );
-            if (newPort == null)
-                return null;
-            target.Port = (int)newPort;
+                    target.id = (int)newId;
+                    break;
+                }
 
 
-            string? newUsername = Ask.String(
-                isNew ? "Enter Target Username" : $"Current Username ({target.Username})",
-                checkEmpty: isNew
-            );
-            if (newUsername == null)
-                return null;
-            else if (newUsername != string.Empty)
-                target.Username = newUsername;
+                string? newName = Ask.String(
+                    isNew ? "Enter Target Name" : $"Current Name ({target.Name})",
+                    checkEmpty: isNew
+                );
+                if (newName == null)
+                    return null;
+                else if (newName != string.Empty)
+                    target.Name = newName;
 
 
-            bool? newScanOnline = Ask.Bool(
-                isNew ? "Scan Online Status?" : $"Current Scan Online Status ({(target.ScanOnline ? "y" : "n")})",
-                isNew ? null : target.ScanOnline
-            );
-            if (newScanOnline == null)
-                return null;
-            target.ScanOnline = (bool)newScanOnline;
+                string? newIP = Ask.String(
+                    isNew ? "Enter Target IP (or HostName)" : $"Current IP ({target.IP})",
+                    checkEmpty: isNew
+                );
+                if (newIP == null)
+                    return null;
+                else if (newIP != string.Empty)
+                    target.IP = newIP;
 
 
-            return target;
-        }
+                int? newPort = Ask.Int(
+                    isNew ? "Enter Target Port (default 22)" : $"Current Port ({target.Port})",
+                    isNew ? 22 : target.Port
+                );
+                if (newPort == null)
+                    return null;
+                target.Port = (int)newPort;
 
-        public static ConfigRoot ReLoadConfig()
-        {
-            if (!File.Exists(Program.CONFIGPATH))
-                return new ConfigRoot();
 
-            string jsonText = File.ReadAllText(Program.CONFIGPATH);
+                string? newUsername = Ask.String(
+                    isNew ? "Enter Target Username" : $"Current Username ({target.Username})",
+                    checkEmpty: isNew
+                );
+                if (newUsername == null)
+                    return null;
+                else if (newUsername != string.Empty)
+                    target.Username = newUsername;
 
-            return JsonSerializer.Deserialize(jsonText, ConfigJsonContext.Default.ConfigRoot) ?? new ConfigRoot();
-        }
 
-        static string GetJsonFromConfig(ConfigRoot config)
-        {
-            config.Targets = [.. config.Targets.OrderBy(t => t.id)];
+                bool? newScanOnline = Ask.Bool(
+                    isNew ? "Scan Online Status?" : $"Current Scan Online Status ({(target.ScanOnline ? "y" : "n")})",
+                    isNew ? null : target.ScanOnline
+                );
+                if (newScanOnline == null)
+                    return null;
+                target.ScanOnline = (bool)newScanOnline;
 
-            return JsonSerializer.Serialize(
-                config,
-                ConfigJsonContext.Default.ConfigRoot
-            );
-        }
 
-        public static void ShowConfig(ConfigRoot config)
-        {
-            string json = GetJsonFromConfig(config);
-            Console.WriteLine("Current Configuration:");
-            Console.WriteLine(json);
-        }
+                return target;
+            }
 
-        public static ConfigRoot SaveConfig(ConfigRoot config)
-        {
-            string json = GetJsonFromConfig(config);
+            public static ConfigRoot ReLoad()
+            {
+                if (!File.Exists(Program.CONFIGPATH))
+                    return new ConfigRoot();
 
-            WriteLine.Success("Done!!");
-            Console.WriteLine("Saved Configuration:");
-            Console.WriteLine(json);
+                string jsonText = File.ReadAllText(Program.CONFIGPATH);
 
-            File.WriteAllText(Program.CONFIGPATH, json);
-            return config;
+                return JsonSerializer.Deserialize(jsonText, ConfigJsonContext.Default.ConfigRoot) ?? new ConfigRoot();
+            }
+
+            static string GetJsonFromConfig(ConfigRoot config)
+            {
+                config.Targets = [.. config.Targets.OrderBy(t => t.id)];
+
+                return JsonSerializer.Serialize(
+                    config,
+                    ConfigJsonContext.Default.ConfigRoot
+                );
+            }
+
+            public static void Show(ConfigRoot config)
+            {
+                string json = GetJsonFromConfig(config);
+                Console.WriteLine("Current Configuration:");
+                Console.WriteLine(json);
+            }
+
+            public static ConfigRoot Save(ConfigRoot config)
+            {
+                string json = GetJsonFromConfig(config);
+
+                WriteLine.Success("Done!!");
+                Console.WriteLine("Saved Configuration:");
+                Console.WriteLine(json);
+
+                File.WriteAllText(Program.CONFIGPATH, json);
+                return config;
+            }
         }
 
 
