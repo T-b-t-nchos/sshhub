@@ -148,7 +148,7 @@ namespace sshhub
 
             Console.WriteLine();
 
-            Info("Press Any Key to Back Menu...");
+            Info("Press any key to return to the menu...");
             Console.ReadKey(true);
             ShowMenu();
         }
