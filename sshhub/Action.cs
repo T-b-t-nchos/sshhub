@@ -1,4 +1,6 @@
-﻿using System.Net.Sockets;
+﻿using System.Diagnostics;
+using System.Net.NetworkInformation;
+using System.Net.Sockets;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 
@@ -201,7 +203,7 @@ namespace sshhub
 
         public class TCP
         {
-            public static async Task<bool> CanConnectAsync(
+            public static async Task<TCPState> CanConnectAsync(
                 string host,
                 int port = 22,
                 int timeoutMs = 600)
@@ -212,12 +214,24 @@ namespace sshhub
                 try
                 {
                     await client.ConnectAsync(host, port, cts.Token);
-                    return true;
-                }
-                catch
+                    return TCPState.Online;
+                }  
+                catch (OperationCanceledException)
                 {
-                    return false;
+                    return TCPState.Offline;
                 }
+                catch (Exception)
+                {
+                    return TCPState.Error;
+                }
+            }
+
+            public enum TCPState
+            {
+                Online,
+                Offline,
+                Error,
+                None
             }
         }
 
@@ -251,14 +265,17 @@ namespace sshhub
                 Array.Resize(ref items, items.Length + 1);
 
                 bool doScanOnline = scanOnline && t.ScanOnline;
-                bool isOnline = false;
-                string status = string.Empty;
+                TCP.TCPState status = TCP.TCPState.None;
                 string statusColor = string.Empty;
                 if (doScanOnline)
                 {
-                    isOnline = TCP.CanConnectAsync(t.IP, t.Port).GetAwaiter().GetResult();
-                    status = isOnline ? "Online" : "Offline";
-                    statusColor = !isOnline ? "\e[91m" : "";
+                    status = TCP.CanConnectAsync(t.IP, t.Port).GetAwaiter().GetResult();
+                    statusColor = status switch
+                    {
+                        TCP.TCPState.Offline => "\e[91m",
+                        TCP.TCPState.Error => "\e[31m",
+                        _ => ""
+                    };
                 }
                 items[^1] = toptext + statusColor + "$ " + 
                     $"ID: {t.id}, Name: {t.Name}, IP: {t.IP}, Port: {t.Port}, Username: {t.Username}{(doScanOnline ? $", {status}" : "")}";
