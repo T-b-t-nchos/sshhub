@@ -23,20 +23,20 @@ namespace sshhub
                     Console.Write($"{prompt} >> ");
                     string input = Console.ReadLine() ?? string.Empty;
 
+                    if (input.Equals("!cancel", StringComparison.CurrentCultureIgnoreCase))
+                        return null;
+
                     if (!string.IsNullOrWhiteSpace(input))
                         return input;
 
                     else if (!checkEmpty)
                         return input;
 
-                    else if (input.Equals("!Cancel", StringComparison.CurrentCultureIgnoreCase))
-                        return null;
-
-                    WriteLine.Error("Input cannot be empty. Please try again. (Cancel to \"!Cancel\")");
+                    WriteLine.Error("Input cannot be empty. Please try again. (Cancel to \"!cancel\" or \"!CANCEL\")");
                 }
             }
 
-            public static int Int(string prompt, int defaultValue)
+            public static int? Int(string prompt, int defaultValue)
             {
                 while (true)
                 {
@@ -44,15 +44,17 @@ namespace sshhub
 
                     string input = Console.ReadLine() ?? string.Empty;
 
-                    if (string.IsNullOrEmpty(input))
+                    if (input.Equals("!cancel", StringComparison.CurrentCultureIgnoreCase))
+                        return null;
+
+                    if (int.TryParse(input, out int result) && !string.IsNullOrWhiteSpace(input))
+                        return result;
+
+                    else if (defaultValue != -1)
                         return defaultValue;
 
-                    if (int.TryParse(input, out int result))
-                        return result;
-                    else if (input.Equals("!Cancel", StringComparison.CurrentCultureIgnoreCase))
-                        return -1;
 
-                    WriteLine.Error("Invalid integer. Please try again. (Cancel to \"!Cancel\")");
+                    WriteLine.Error("Invalid integer. Please try again. (Cancel to \"!cancel\" or \"!CANCEL\")");
                 }
             }
         }
@@ -222,9 +224,9 @@ namespace sshhub
 
             while (true)
             {
-                int newId = Ask.Int(isNew ? "Enter Target ID" : $"Current ID ({target.id})", target.id);
+                int? newId = Ask.Int(isNew ? "Enter Target ID" : $"Current ID ({target.id})", isNew ? -1 : target.id);
 
-                if (newId == -1)
+                if (newId == null)
                     return null;
 
                 bool duplicate = allTargets
@@ -237,7 +239,7 @@ namespace sshhub
                     continue;
                 }
 
-                target.id = newId;
+                target.id = (int)newId;
                 break;
             }
 
@@ -248,8 +250,8 @@ namespace sshhub
             );
             if (newName == null)
                 return null;
-
-            target.Name = newName;
+            else if (newName != string.Empty)
+                target.Name = newName;
 
 
             string? newIP = Ask.String(
@@ -258,16 +260,17 @@ namespace sshhub
             );
             if (newIP == null)
                 return null;
-            target.IP = newIP;
+            else if (newIP != string.Empty)
+                target.IP = newIP;
 
 
-            int newPort = Ask.Int(
+            int? newPort = Ask.Int(
                 isNew ? "Enter Target Port (default 22)" : $"Current Port ({target.Port})",
-                target.Port
+                isNew ? 22 : target.Port
             );
-            if (newPort == -1)
+            if (newPort == null)
                 return null;
-            target.Port = newPort;
+            target.Port = (int)newPort;
 
 
             string? newUsername = Ask.String(
@@ -276,7 +279,8 @@ namespace sshhub
             );
             if (newUsername == null)
                 return null;
-            target.Username = newUsername;
+            else if (newUsername != string.Empty)
+                target.Username = newUsername;
 
 
             return target;
