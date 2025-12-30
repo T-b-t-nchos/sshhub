@@ -114,6 +114,12 @@ namespace sshhub
             return;
         }
 
+        /// <summary>
+        /// Display a two-option menu that lets the user view configured targets or view settings, handle the chosen action, and return to the main menu.
+        /// </summary>
+        /// <remarks>
+        /// Presents options to list targets or list settings, allows navigation with Up/Down or by pressing 1 or 2, and cancels back to the main menu when ESC is pressed. After performing the selected action, waits for a key press and then returns to the main menu.
+        /// </remarks>
         static void ListTargets()
         {
             Console.Clear();
@@ -148,11 +154,14 @@ namespace sshhub
 
             Console.WriteLine();
 
-            Info("Press Any Key to Back Menu...");
+            Info("Press any key to return to the menu...");
             Console.ReadKey(true);
             ShowMenu();
         }
 
+        /// <summary>
+        /// Prompts the user to create a new target, adds it to the current configuration, persists the configuration, and returns to the main menu.
+        /// </summary>
         static void AddTarget()
         {
             Console.Clear();
@@ -173,10 +182,16 @@ namespace sshhub
 
             Config = SaveConfig(Config);
 
-            Console.ReadKey();
+            Console.ReadKey(true);
             ShowMenu();
         }
 
+        /// <summary>
+        /// Prompts the user to choose an existing target, opens the target editor for modification, saves changes to the configuration, and returns to the main menu.
+        /// </summary>
+        /// <remarks>
+        /// If the user cancels selection or no target is chosen, control returns immediately to the main menu without saving.
+        /// </remarks>
         static void EditTarget()
         {
             Console.Clear();
@@ -184,14 +199,6 @@ namespace sshhub
             TargetConfig? target = SelectTarget(Config, "Select Target to edit", "\e[93m");
             if (target == null)
             {
-                ShowMenu();
-                return;
-            }
-
-            if (target == null)
-            {
-                Error("Target not found.");
-                Console.ReadKey();
                 ShowMenu();
                 return;
             }
@@ -211,7 +218,7 @@ namespace sshhub
             Config = SaveConfig(Config);
 
             Info("Press Any Key to Back Menu...");
-            Console.ReadKey();
+            Console.ReadKey(true);
             ShowMenu();
         }
 
@@ -244,6 +251,12 @@ namespace sshhub
         }
 
 
+        /// <summary>
+        /// Prompt the user to edit the command template used to launch SSH and persist the updated template to the application configuration.
+        /// </summary>
+        /// <remarks>
+        /// Supported placeholders: {@code {$IP}}, {@code {$Port}}, {@code {$Username}}. If the user cancels the prompt (provides no input), the configuration is not changed and the method returns to the main menu.
+        /// </remarks>
         static void EditExec()
         {
             Console.Clear();
@@ -264,7 +277,7 @@ namespace sshhub
             Config = SaveConfig(Config);
 
             Info("Press Any Key to Back Menu...");
-            Console.ReadKey();
+            Console.ReadKey(true);
             ShowMenu();
         }
 

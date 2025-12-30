@@ -1,0 +1,8 @@
+﻿# sshhub
+[English](README.md) | [日本語](README.ja.md)
+## A simple SSH connection manager
+sshhub is a CLI tool to easily manage multiple SSH connections.
+
+I made this app for me at first.  
+so maybe it won't fit your needs,   
+but this project is welcome to your contributions! Feel free to make a PR!

@@ -172,12 +172,28 @@ namespace sshhub
             }
         }
 
+        /// <summary>
+        /// Displays an interactive menu of configured targets and lets the user choose one.
+        /// </summary>
+        /// <param name="config">The configuration containing the available targets.</param>
+        /// <param name="infoMsg">Header text shown above the menu to provide context to the user.</param>
+        /// <param name="toptext">Prefix text added to each menu entry before the target details.</param>
+        /// <returns>The chosen <see cref="TargetConfig"/>, or <c>null</c> if the user cancels the selection or no targets are available.</returns>
         public static TargetConfig? SelectTarget(ConfigRoot config, string infoMsg, string toptext)
         {
             Console.Clear();
 
             WriteLine.Info($"{infoMsg} (Press ESC to cancel)");
             WriteLine.Info("You can choose Up/Down Allow or Number 1to9");
+
+            if (config.Targets.Length == 0)
+            {
+                WriteLine.Error("\e[7m> No targets available.");
+                Console.WriteLine();
+                WriteLine.Info("Press any key to return to the menu...");
+                Console.ReadKey(true);
+                return null;
+            }
 
             string[] items = [];
             foreach (var t in config.Targets)
