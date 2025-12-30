@@ -60,11 +60,12 @@ namespace sshhub
                     if (int.TryParse(input, out int result) && !string.IsNullOrWhiteSpace(input))
                         return result;
 
+                    else if (!checkEmpty)
+                        return result;
+
                     else if (defaultValue != -1)
                         return defaultValue;
 
-                    else if (!checkEmpty)
-                        return result;
 
                     WriteLine.Error("Invalid integer. Please try again. (Cancel to \"!cancel\" or \"!CANCEL\")");
                 }
