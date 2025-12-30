@@ -1,5 +1,6 @@
 ﻿using System.Diagnostics;
 using static sshhub.Action;
+using static sshhub.Action.Config;
 using static sshhub.Action.WriteLine;
 
 namespace sshhub
@@ -16,11 +17,11 @@ namespace sshhub
             if (!File.Exists(CONFIGPATH))
             {
                 Config = new ConfigRoot();
-                SaveConfig(Config);
+                Save(Config);
             }
             else
             {
-                Config = ReLoadConfig();
+                Config = ReLoad();
             }
 
             Console.Clear();
@@ -154,7 +155,7 @@ namespace sshhub
                     WriteTargets(Config.Targets);
                     break;
                 case 1:
-                    ShowConfig(Config);
+                    Show(Config);
                     break;
             }
 
@@ -186,7 +187,7 @@ namespace sshhub
 
             Config.Targets = [.. Config.Targets, newTarget];
 
-            Config = SaveConfig(Config);
+            Config = Save(Config);
 
             Console.ReadKey(true);
             ShowMenu();
@@ -221,7 +222,7 @@ namespace sshhub
                 return;
             }
 
-            Config = SaveConfig(Config);
+            Config = Save(Config);
 
             Info("Press Any Key to Back Menu...");
             Console.ReadKey(true);
@@ -249,7 +250,7 @@ namespace sshhub
 
             Config.Targets = [.. Config.Targets.Where(t => t != target)];
 
-            Config = SaveConfig(Config);
+            Config = Save(Config);
 
             Success("Target deleted.");
             Console.ReadKey(true);
@@ -280,7 +281,7 @@ namespace sshhub
             }
 
             Config.Exec = input.Trim();
-            Config = SaveConfig(Config);
+            Config = Save(Config);
 
             Info("Press Any Key to Back Menu...");
             Console.ReadKey(true);
