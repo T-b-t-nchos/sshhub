@@ -1,6 +1,4 @@
-﻿using System.Diagnostics;
-using System.Net.NetworkInformation;
-using System.Net.Sockets;
+﻿using System.Net.Sockets;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 
@@ -215,13 +213,20 @@ namespace sshhub
                 {
                     await client.ConnectAsync(host, port, cts.Token);
                     return TCPState.Online;
-                }  
+                }
                 catch (OperationCanceledException)
                 {
+                    // Timeout
+                    return TCPState.Offline;
+                }
+                catch (SocketException)
+                {
+                    // Connection refused, host unreachable, etc.
                     return TCPState.Offline;
                 }
                 catch (Exception)
                 {
+                    // DNS failures, unexpected errors
                     return TCPState.Error;
                 }
             }
@@ -280,7 +285,7 @@ namespace sshhub
                         _ => ""
                     };
                 }
-                items[^1] = toptext + statusColor + "$ " + 
+                items[^1] = toptext + statusColor + "$ " +
                     $"ID: {t.id}, Name: {t.Name}, IP: {t.IP}, Port: {t.Port}, Username: {t.Username}{(doScanOnline ? $", {status}" : "")}";
             }
 
