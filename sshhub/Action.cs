@@ -237,7 +237,7 @@ namespace sshhub
 
             while (true)
             {
-                int newId = Ask.Int(isNew ? "Enter Target ID" : $"Current ID ({target.id})", checkEmpty: isNew);
+                int? newId = Ask.Int(isNew ? "Enter Target ID" : $"Current ID ({target.id})", checkEmpty: isNew);
 
                 if (newId == null)
                     return null;
@@ -277,13 +277,13 @@ namespace sshhub
                 target.IP = newIP;
 
 
-            int newPort = Ask.Int(
+            int? newPort = Ask.Int(
                 isNew ? "Enter Target Port (default 22)" : $"Current Port ({target.Port})",
                 defaultValue: 22
             );
             if (newPort == null)
                 return null;
-            target.Port = newPort;
+            target.Port = (int)newPort;
 
 
             string? newUsername = Ask.String(
