@@ -1,5 +1,6 @@
 ﻿using System.Diagnostics;
 using static sshhub.Action;
+using static sshhub.Action.Config;
 using static sshhub.Action.WriteLine;
 
 namespace sshhub
@@ -16,17 +17,23 @@ namespace sshhub
             if (!File.Exists(CONFIGPATH))
             {
                 Config = new ConfigRoot();
-                SaveConfig(Config);
+                Save(Config);
             }
             else
             {
-                Config = ReLoadConfig();
+                Config = ReLoad();
             }
 
             Console.Clear();
             ShowMenu();
         }
 
+        /// <summary>
+        /// Displays the application's main menu, accepts a selection, and dispatches to the corresponding action.
+        /// </summary>
+        /// <remarks>
+        /// Clears the console, renders the menu, and invokes one of: Connect, ListTargets, AddTarget, EditTarget, DeleteTarget, EditExec, or ConfirmExit. Selecting the exit option or cancelling the menu will invoke ConfirmExit, which may terminate the process.
+        /// </remarks>
         static void ShowMenu()
         {
             Console.Clear();
@@ -45,10 +52,10 @@ namespace sshhub
                 "\e[93m" + "$ " + "4. Edit Target",
                 "\e[95m" + "$ " + "5. Delete Target",
                 "\e[95m" + "$ " + "6. Edit Execution Option",
-                "\e[91m" + "$ " + "0. Exit"
+                "\e[91m" + "$ " + "7. Exit"
             ];
 
-            int selected = SelectableMenu(menuItems, 4, false);
+            int selected = SelectableMenu(menuItems, 4, true);
             if (selected == -1)
             {
                 ConfirmExit();
@@ -70,7 +77,7 @@ namespace sshhub
         {
             Console.Clear();
 
-            TargetConfig? target = SelectTarget(Config, "Select Target to Connect", "\e[92m");
+            TargetConfig? target = SelectTarget(Config, "Select Target to Connect", "\e[92m", true);
             if (target == null)
             {
                 ShowMenu();
@@ -148,7 +155,7 @@ namespace sshhub
                     WriteTargets(Config.Targets);
                     break;
                 case 1:
-                    ShowConfig(Config);
+                    Show(Config);
                     break;
             }
 
@@ -166,10 +173,9 @@ namespace sshhub
         {
             Console.Clear();
 
-            var newTarget = EditTargetConfig(
+            var newTarget = AddTargetConfig(
                 target: null,
-                allTargets: Config.Targets,
-                isNew: true
+                allTargets: Config.Targets
             );
 
             if (newTarget == null)
@@ -180,7 +186,7 @@ namespace sshhub
 
             Config.Targets = [.. Config.Targets, newTarget];
 
-            Config = SaveConfig(Config);
+            Config = Save(Config);
 
             Console.ReadKey(true);
             ShowMenu();
@@ -196,26 +202,27 @@ namespace sshhub
         {
             Console.Clear();
 
-            TargetConfig? target = SelectTarget(Config, "Select Target to edit", "\e[93m");
+            TargetConfig? target = SelectTarget(Config, "Select Target to edit", "\e[93m", false);
             if (target == null)
             {
                 ShowMenu();
                 return;
             }
 
-            EditTargetConfig(
+            TargetConfig? newTarget = EditTargetConfig(
                 target,
-                Config.Targets,
-                isNew: false
+                Config.Targets
             );
 
-            if (target == null)
+            if (newTarget == null)
             {
                 ShowMenu();
                 return;
             }
 
-            Config = SaveConfig(Config);
+            Config.Targets = [.. Config.Targets.Where(t => t != target), newTarget];
+
+            Config = Save(Config);
 
             Info("Press Any Key to Back Menu...");
             Console.ReadKey(true);
@@ -226,7 +233,7 @@ namespace sshhub
         {
             Console.Clear();
 
-            TargetConfig? target = SelectTarget(Config, "Select Target to Delete", "\e[95m");
+            TargetConfig? target = SelectTarget(Config, "Select Target to Delete", "\e[95m", false);
             if (target == null)
             {
                 ShowMenu();
@@ -243,7 +250,7 @@ namespace sshhub
 
             Config.Targets = [.. Config.Targets.Where(t => t != target)];
 
-            Config = SaveConfig(Config);
+            Config = Save(Config);
 
             Success("Target deleted.");
             Console.ReadKey(true);
@@ -274,7 +281,7 @@ namespace sshhub
             }
 
             Config.Exec = input.Trim();
-            Config = SaveConfig(Config);
+            Config = Save(Config);
 
             Info("Press Any Key to Back Menu...");
             Console.ReadKey(true);

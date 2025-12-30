@@ -14,5 +14,6 @@
         public string IP { get; set; } = string.Empty;
         public int Port { get; set; } = 22;
         public string Username { get; set; } = string.Empty;
+        public bool ScanOnline { get; set; } = false;
     }
 }
