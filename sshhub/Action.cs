@@ -183,7 +183,7 @@ namespace sshhub
             {
                 WriteLine.Error("\e[7m> No targets available.");
                 Console.WriteLine();
-                WriteLine.Info("Press Any Key to Back Menu...");
+                WriteLine.Info("Press any key to return to the menu...");
                 Console.ReadKey(true);
                 return null;
             }
