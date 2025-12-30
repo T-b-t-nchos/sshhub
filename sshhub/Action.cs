@@ -36,17 +36,17 @@ namespace sshhub
                 }
             }
 
-            public static int Int(string prompt, bool checkEmpty)
+            public static int? Int(string prompt, bool checkEmpty)
             {
                 return Int(prompt: prompt, checkEmpty: checkEmpty, defaultValue: -1);
             }
 
-            public static int Int(string prompt, int defaultValue)
+            public static int? Int(string prompt, int defaultValue)
             {
                 return Int(prompt: prompt, checkEmpty: true, defaultValue: defaultValue);
             }
 
-            static int Int(string prompt, bool checkEmpty, int defaultValue)
+            static int? Int(string prompt, bool checkEmpty, int defaultValue)
             {
                 while (true)
                 {
@@ -55,7 +55,7 @@ namespace sshhub
                     string input = Console.ReadLine() ?? string.Empty;
 
                     if (input.Equals("!cancel", StringComparison.CurrentCultureIgnoreCase))
-                        return -1;
+                        return null;
 
                     if (int.TryParse(input, out int result) && !string.IsNullOrWhiteSpace(input))
                         return result;
@@ -238,7 +238,7 @@ namespace sshhub
             {
                 int newId = Ask.Int(isNew ? "Enter Target ID" : $"Current ID ({target.id})", checkEmpty: isNew);
 
-                if (newId == -1)
+                if (newId == null)
                     return null;
 
                 bool duplicate = allTargets
@@ -279,7 +279,7 @@ namespace sshhub
                 isNew ? "Enter Target Port (default 22)" : $"Current Port ({target.Port})",
                 defaultValue: 22
             );
-            if (newPort == -1)
+            if (newPort == null)
                 return null;
             target.Port = newPort;
 
