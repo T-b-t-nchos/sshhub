@@ -1,4 +1,4 @@
-﻿using System.Diagnostics;
+using System.Diagnostics;
 using static sshhub.Action;
 using static sshhub.Action.WriteLine;
 
@@ -27,6 +27,12 @@ namespace sshhub
             ShowMenu();
         }
 
+        /// <summary>
+        /// Displays the application's main menu, accepts a selection, and dispatches to the corresponding action.
+        /// </summary>
+        /// <remarks>
+        /// Clears the console, renders the menu, and invokes one of: Connect, ListTargets, AddTarget, EditTarget, DeleteTarget, EditExec, or ConfirmExit. Selecting the exit option or cancelling the menu will invoke ConfirmExit, which may terminate the process.
+        /// </remarks>
         static void ShowMenu()
         {
             Console.Clear();
@@ -45,10 +51,10 @@ namespace sshhub
                 "\e[93m" + "$ " + "4. Edit Target",
                 "\e[95m" + "$ " + "5. Delete Target",
                 "\e[95m" + "$ " + "6. Edit Execution Option",
-                "\e[91m" + "$ " + "0. Exit"
+                "\e[91m" + "$ " + "7. Exit"
             ];
 
-            int selected = SelectableMenu(menuItems, 4, false);
+            int selected = SelectableMenu(menuItems, 4, true);
             if (selected == -1)
             {
                 ConfirmExit();
