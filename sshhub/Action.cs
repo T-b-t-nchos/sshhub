@@ -263,8 +263,8 @@ namespace sshhub
             );
             if (newName == null)
                 return null;
-
-            target.Name = newName;
+            else if (newName != string.Empty)
+                target.Name = newName;
 
 
             string? newIP = Ask.String(
@@ -273,7 +273,8 @@ namespace sshhub
             );
             if (newIP == null)
                 return null;
-            target.IP = newIP;
+            else if (newIP != string.Empty)
+                target.IP = newIP;
 
 
             int newPort = Ask.Int(
@@ -291,7 +292,8 @@ namespace sshhub
             );
             if (newUsername == null)
                 return null;
-            target.Username = newUsername;
+            else if (newUsername != string.Empty)
+                target.Username = newUsername;
 
 
             return target;
