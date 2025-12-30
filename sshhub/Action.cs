@@ -204,7 +204,7 @@ namespace sshhub
             public static async Task<bool> CanConnectAsync(
                 string host,
                 int port = 22,
-                int timeoutMs = 300)
+                int timeoutMs = 600)
             {
                 using var client = new TcpClient();
                 using var cts = new CancellationTokenSource(timeoutMs);
