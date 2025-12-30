@@ -179,6 +179,15 @@ namespace sshhub
             WriteLine.Info($"{infoMsg} (Press ESC to cancel)");
             WriteLine.Info("You can choose Up/Down Allow or Number 1to9");
 
+            if (config.Targets.Length == 0)
+            {
+                WriteLine.Error("\e[7m> No targets available.");
+                Console.WriteLine();
+                WriteLine.Info("Press any key to continue...");
+                Console.ReadKey(true);
+                return null;
+            }
+
             string[] items = [];
             foreach (var t in config.Targets)
             {
