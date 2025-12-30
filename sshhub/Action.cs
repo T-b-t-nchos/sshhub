@@ -252,7 +252,7 @@ namespace sshhub
                     continue;
                 }
 
-                target.id = newId;
+                target.id = (int)newId;
                 break;
             }
 
