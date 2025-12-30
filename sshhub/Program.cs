@@ -1,4 +1,4 @@
-using System.Diagnostics;
+﻿using System.Diagnostics;
 using static sshhub.Action;
 using static sshhub.Action.WriteLine;
 
