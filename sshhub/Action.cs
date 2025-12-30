@@ -286,7 +286,7 @@ namespace sshhub
                     };
                 }
                 items[^1] = toptext + statusColor + "$ " +
-                    $"ID: {t.id}, Name: {t.Name}, IP: {t.IP}, Port: {t.Port}, Username: {t.Username}{(doScanOnline ? $", {status}" : "")}";
+                    $"ID: {t.id}, Name: {t.Name}, {t.Username} @{t.IP} :{t.Port}{(doScanOnline ? $", {status}" : "")}";
             }
 
             int selected = WriteLine.SelectableMenu(items, 2, true);
