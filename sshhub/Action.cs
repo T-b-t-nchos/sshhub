@@ -32,7 +32,7 @@ namespace sshhub
                     else if (!checkEmpty)
                         return input;
 
-                    WriteLine.Error("Input cannot be empty. Please try again. (Cancel to \"!Cancel\")");
+                    WriteLine.Error("Input cannot be empty. Please try again. (Cancel to \"!cancel\" or \"!CANCEL\")");
                 }
             }
 
@@ -53,7 +53,7 @@ namespace sshhub
                     if (int.TryParse(input, out int result))
                         return result;
 
-                    WriteLine.Error("Invalid integer. Please try again. (Cancel to \"!Cancel\")");
+                    WriteLine.Error("Invalid integer. Please try again. (Cancel to \"!cancel\" or \"!CANCEL\")");
                 }
             }
         }
