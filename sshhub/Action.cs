@@ -259,6 +259,9 @@ namespace sshhub
                 return null;
             }
 
+            if (scanOnline)
+                WriteLine.Info("\e[7m> Scanning online status, please wait...");
+
             string[] items = [];
             foreach (var t in config.Targets)
             {
