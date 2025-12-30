@@ -173,7 +173,7 @@ namespace sshhub
 
             Config = SaveConfig(Config);
 
-            Console.ReadKey();
+            Console.ReadKey(true);
             ShowMenu();
         }
 
@@ -191,7 +191,7 @@ namespace sshhub
             if (target == null)
             {
                 Error("Target not found.");
-                Console.ReadKey();
+                Console.ReadKey(true);
                 ShowMenu();
                 return;
             }
@@ -211,7 +211,7 @@ namespace sshhub
             Config = SaveConfig(Config);
 
             Info("Press Any Key to Back Menu...");
-            Console.ReadKey();
+            Console.ReadKey(true);
             ShowMenu();
         }
 
@@ -264,7 +264,7 @@ namespace sshhub
             Config = SaveConfig(Config);
 
             Info("Press Any Key to Back Menu...");
-            Console.ReadKey();
+            Console.ReadKey(true);
             ShowMenu();
         }
 
