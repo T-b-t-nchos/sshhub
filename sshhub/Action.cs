@@ -301,81 +301,232 @@ namespace sshhub
                 return config.Targets[selected];
             }
 
-            public static TargetConfig? EditTargetConfig(TargetConfig? target, TargetConfig[] allTargets, bool isNew)
+            public static TargetConfig? AddTargetConfig(TargetConfig? target, TargetConfig[] allTargets)
             {
                 target ??= new TargetConfig();
 
-                while (true)
-                {
-                    int? newId = Ask.Int(isNew ? "Enter Target ID" : $"Current ID ({target.id})", isNew ? -1 : target.id);
+                int? newId = ConfigAsk.ID(target, allTargets, true);
+                if (newId == null)
+                    return null;
+                target.id = (int)newId;
 
-                    if (newId == null)
-                        return null;
-
-                    bool duplicate = allTargets
-                        .Where(t => !ReferenceEquals(t, target))
-                        .Any(t => t.id == newId);
-
-                    if (duplicate)
-                    {
-                        WriteLine.Error("Duplicate ID.");
-                        continue;
-                    }
-
-                    target.id = (int)newId;
-                    break;
-                }
-
-
-                string? newName = Ask.String(
-                    isNew ? "Enter Target Name" : $"Current Name ({target.Name})",
-                    checkEmpty: isNew
-                );
+                string? newName = ConfigAsk.Name(target, allTargets, true);
                 if (newName == null)
                     return null;
-                else if (newName != string.Empty)
-                    target.Name = newName;
+                target.Name = newName;
 
-
-                string? newIP = Ask.String(
-                    isNew ? "Enter Target IP (or HostName)" : $"Current IP ({target.IP})",
-                    checkEmpty: isNew
-                );
+                string? newIP = ConfigAsk.IP(target, allTargets, true);
                 if (newIP == null)
                     return null;
-                else if (newIP != string.Empty)
-                    target.IP = newIP;
+                target.IP = newIP;
 
-
-                int? newPort = Ask.Int(
-                    isNew ? "Enter Target Port (default 22)" : $"Current Port ({target.Port})",
-                    isNew ? 22 : target.Port
-                );
+                int? newPort = ConfigAsk.Port(target, allTargets, true);
                 if (newPort == null)
                     return null;
                 target.Port = (int)newPort;
 
-
-                string? newUsername = Ask.String(
-                    isNew ? "Enter Target Username" : $"Current Username ({target.Username})",
-                    checkEmpty: isNew
-                );
+                string? newUsername = ConfigAsk.Username(target, allTargets, true);
                 if (newUsername == null)
                     return null;
-                else if (newUsername != string.Empty)
-                    target.Username = newUsername;
+                target.Username = newUsername;
 
-
-                bool? newScanOnline = Ask.Bool(
-                    isNew ? "Scan Online Status?" : $"Current Scan Online Status ({(target.ScanOnline ? "y" : "n")})",
-                    isNew ? null : target.ScanOnline
-                );
+                bool? newScanOnline = ConfigAsk.ScanOnline(target, allTargets, true);
                 if (newScanOnline == null)
                     return null;
                 target.ScanOnline = (bool)newScanOnline;
 
 
                 return target;
+            }
+
+            public static TargetConfig? EditTargetConfig(TargetConfig target, TargetConfig[] allTargets)
+            {
+                TargetConfig newTarget = new()
+                {
+                    id = target.id,
+                    Name = target.Name,
+                    IP = target.IP,
+                    Port = target.Port,
+                    Username = target.Username,
+                    ScanOnline = target.ScanOnline
+                };
+
+                while (true)
+                {
+                    Console.Clear();
+
+                    WriteLine.Info("Select edit option (Press ESC to cancel)");
+                    WriteLine.Info("You can choose Up/Down Allow or Number 1to9");
+
+                    string[] menuItems =
+                    [
+                        "\e[93m" + "$ " + $"1. ID          ({newTarget.id})",
+                        "\e[93m" + "$ " + $"2. Name        ({newTarget.Name})",
+                        "\e[93m" + "$ " + $"3. IP          ({newTarget.IP})",
+                        "\e[93m" + "$ " + $"4. Port        ({newTarget.Port})",
+                        "\e[93m" + "$ " + $"5. Username    ({newTarget.Username})",
+                        "\e[93m" + "$ " + $"6. ScanOnline  ({newTarget.ScanOnline})",
+                        "\e[91m" + "$ " + "7. Cancel",
+                        "\e[92m" + "$ " + "8. Save/Exit"
+                    ];
+
+                    int selected = WriteLine.SelectableMenu(menuItems, 2, true);
+
+                    Console.WriteLine("");
+
+                    switch (selected)
+                    {
+                        case 0:
+                            {
+                                int? newId = ConfigAsk.ID(target, allTargets, false);
+                                if (newId == null)
+                                    break;
+                                newTarget.id = (int)newId;
+                                break;
+                            }
+                        case 1:
+                            {
+                                string? newName = ConfigAsk.Name(target, allTargets, false);
+                                if (newName == null)
+                                    break;
+                                newTarget.Name = newName;
+                                break;
+                            }
+                        case 2:
+                            {
+                                string? newIP = ConfigAsk.IP(target, allTargets, false);
+                                if (newIP == null)
+                                    break;
+                                newTarget.IP = newIP;
+                                break;
+                            }
+                        case 3:
+                            {
+                                int? newPort = ConfigAsk.Port(target, allTargets, false);
+                                if (newPort == null)
+                                    break;
+                                newTarget.Port = (int)newPort;
+                                break;
+                            }
+                        case 4:
+                            {
+                                string? newUsername = ConfigAsk.Username(target, allTargets, false);
+                                if (newUsername == null)
+                                    break;
+                                newTarget.Username = newUsername;
+                                break;
+                            }
+                        case 5:
+                            {
+                                bool? newScanOnline = ConfigAsk.ScanOnline(target, allTargets, false);
+                                if (newScanOnline == null)
+                                    break;
+                                newTarget.ScanOnline = (bool)newScanOnline;
+                                break;
+                            }
+                        case 6:
+                        case -1:
+                            {
+                                return null;
+                            }
+                        case 7:
+                            {
+                                return newTarget;
+                            }
+                    }
+                }
+            }
+
+            class ConfigAsk
+            {
+                internal static int? ID(TargetConfig target, TargetConfig[] allTargets, bool isNew)
+                {
+                    while (true)
+                    {
+                        int? newId = Ask.Int(isNew ? "Enter Target ID" : $"Current ID ({target.id})", isNew ? -1 : target.id);
+
+                        if (newId == null)
+                            return null;
+
+                        bool duplicate = allTargets
+                            .Where(t => !ReferenceEquals(t, target))
+                            .Any(t => t.id == newId);
+
+                        if (duplicate)
+                        {
+                            WriteLine.Error("Duplicate ID.");
+                            continue;
+                        }
+
+                        return newId;
+                    }
+                }
+
+                internal static string? Name(TargetConfig target, TargetConfig[] allTargets, bool isNew)
+                {
+                    string? newName = Ask.String(
+                        isNew ? "Enter Target Name" : $"Current Name ({target.Name})",
+                        checkEmpty: isNew
+                    );
+                    if (newName == null)
+                        return null;
+                    else if (newName != string.Empty)
+                        return newName;
+                    else
+                        return target.Name;
+                }
+
+                internal static string? IP(TargetConfig target, TargetConfig[] allTargets, bool isNew)
+                {
+                    string? newIP = Ask.String(
+                        isNew ? "Enter Target IP (or HostName)" : $"Current IP ({target.IP})",
+                        checkEmpty: isNew
+                    );
+                    if (newIP == null)
+                        return null;
+                    else if (newIP != string.Empty)
+                        return newIP;
+                    else
+                        return target.IP;
+                }
+
+                internal static int? Port(TargetConfig target, TargetConfig[] allTargets, bool isNew)
+                {
+                    int? newPort = Ask.Int(
+                        isNew ? "Enter Target Port (default: 22)" : $"Current Port ({target.Port})",
+                        isNew ? 22 : target.Port
+                    );
+                    if (newPort == null)
+                        return null;
+                    else
+                        return newPort;
+                }
+
+                internal static string? Username(TargetConfig target, TargetConfig[] allTargets, bool isNew)
+                {
+                    string? newUsername = Ask.String(
+                        isNew ? "Enter Target Username" : $"Current Username ({target.Username})",
+                        checkEmpty: isNew
+                    );
+                    if (newUsername == null)
+                        return null;
+                    else if (newUsername != string.Empty)
+                        return newUsername;
+                    else
+                        return target.Username;
+                }
+
+                internal static bool? ScanOnline(TargetConfig target, TargetConfig[] allTargets, bool isNew)
+                {
+                    bool? newScanOnline = Ask.Bool(
+                        isNew ? "Enable ScanOnline for this Target" : $"Current ScanOnline ({target.ScanOnline})",
+                        isNew ? false : target.ScanOnline
+                    );
+                    if (newScanOnline == null)
+                        return null;
+                    else
+                        return newScanOnline;
+                }
             }
 
             public static ConfigRoot ReLoad()
