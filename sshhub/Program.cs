@@ -173,10 +173,9 @@ namespace sshhub
         {
             Console.Clear();
 
-            var newTarget = EditTargetConfig(
+            var newTarget = AddTargetConfig(
                 target: null,
-                allTargets: Config.Targets,
-                isNew: true
+                allTargets: Config.Targets
             );
 
             if (newTarget == null)
@@ -210,17 +209,18 @@ namespace sshhub
                 return;
             }
 
-            EditTargetConfig(
+            TargetConfig? newTarget = EditTargetConfig(
                 target,
-                Config.Targets,
-                isNew: false
+                Config.Targets
             );
 
-            if (target == null)
+            if (newTarget == null)
             {
                 ShowMenu();
                 return;
             }
+
+            Config.Targets = [.. Config.Targets.Where(t => t != target), newTarget];
 
             Config = Save(Config);
 
