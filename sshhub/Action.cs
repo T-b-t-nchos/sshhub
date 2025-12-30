@@ -293,10 +293,6 @@ namespace sshhub
 
                 int selected = WriteLine.SelectableMenu(items, 2, true);
 
-                if (selected + 1 > config.Targets.Length)
-                {
-                    return SelectTarget(config, infoMsg, toptext, scanOnline);
-                }
                 if (selected == -1)
                 {
                     return null;
