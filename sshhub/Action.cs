@@ -378,7 +378,7 @@ namespace sshhub
                     {
                         case 0:
                             {
-                                int? newId = ConfigAsk.ID(target, allTargets, false);
+                                int? newId = ConfigAsk.ID(newTarget, allTargets, false);
                                 if (newId == null)
                                     break;
                                 newTarget.id = (int)newId;
@@ -386,7 +386,7 @@ namespace sshhub
                             }
                         case 1:
                             {
-                                string? newName = ConfigAsk.Name(target, allTargets, false);
+                                string? newName = ConfigAsk.Name(newTarget, allTargets, false);
                                 if (newName == null)
                                     break;
                                 newTarget.Name = newName;
@@ -394,7 +394,7 @@ namespace sshhub
                             }
                         case 2:
                             {
-                                string? newIP = ConfigAsk.IP(target, allTargets, false);
+                                string? newIP = ConfigAsk.IP(newTarget, allTargets, false);
                                 if (newIP == null)
                                     break;
                                 newTarget.IP = newIP;
@@ -402,7 +402,7 @@ namespace sshhub
                             }
                         case 3:
                             {
-                                int? newPort = ConfigAsk.Port(target, allTargets, false);
+                                int? newPort = ConfigAsk.Port(newTarget, allTargets, false);
                                 if (newPort == null)
                                     break;
                                 newTarget.Port = (int)newPort;
@@ -410,7 +410,7 @@ namespace sshhub
                             }
                         case 4:
                             {
-                                string? newUsername = ConfigAsk.Username(target, allTargets, false);
+                                string? newUsername = ConfigAsk.Username(newTarget, allTargets, false);
                                 if (newUsername == null)
                                     break;
                                 newTarget.Username = newUsername;
@@ -418,7 +418,7 @@ namespace sshhub
                             }
                         case 5:
                             {
-                                bool? newScanOnline = ConfigAsk.ScanOnline(target, allTargets, false);
+                                bool? newScanOnline = ConfigAsk.ScanOnline(newTarget, allTargets, false);
                                 if (newScanOnline == null)
                                     break;
                                 newTarget.ScanOnline = (bool)newScanOnline;
