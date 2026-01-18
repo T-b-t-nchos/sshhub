@@ -49,8 +49,7 @@ jobs:
 
             rm -rf bin
             mkdir -p bin
-
-            extra_flags="-p:PublishReadyToRun=true"
+            
             if [[ "$1" != osx-* ]]; then
               extra_flags="-p:PublishReadyToRun=true"
             fi
