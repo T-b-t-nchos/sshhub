@@ -79,6 +79,8 @@ jobs:
           RP linux-x64
           RP linux-arm
           RP linux-arm64
+          RP osx-x64
+          RP osx-arm64
 
       - name: Upload assets to Release (on release)
         if: github.event_name == 'release'
