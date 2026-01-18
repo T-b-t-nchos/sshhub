@@ -50,12 +50,17 @@ jobs:
             rm -rf bin
             mkdir -p bin
 
+            extra_flags="-p:PublishReadyToRun=true"
+            if [[ "$1" != osx-* ]]; then
+              extra_flags="-p:PublishReadyToRun=true"
+            fi
+
             dotnet publish -c Release -r "$1" -f net10.0 \
               --self-contained true \
               -p:PublishTrimmed=true \
               -p:AssemblyName=sshhub_"$1" \
               -p:PublishSingleFile=true \
-              -p:PublishReadyToRun=true \
+              $extra_flags \
               -p:PublishDir=bin
 
             echo "--- bin contents ($1) ---"
