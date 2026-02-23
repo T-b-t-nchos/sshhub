@@ -146,7 +146,7 @@ namespace sshhub
             /// <summary>
             /// Displays a selectable menu in the console and allows the user to choose an option using the keyboard.
             /// </summary>
-            /// <remarks>The menu allows navigation using the Up and Down arrow keys. Pressing Enter
+            /// <remarks>The menu allows navigation using the Up and Down arrow keys. Pressing Enter or Spacekey
             /// selects the currently highlighted option. If numeric shortcuts are enabled, pressing a number key (1–9)
             /// selects the corresponding option directly. The method blocks until the user makes a selection or
             /// cancels.</remarks>
@@ -179,6 +179,7 @@ namespace sshhub
                             selectedIndex = (selectedIndex + 1) % options.Length;
                             break;
                         case ConsoleKey.Enter:
+                        case ConsoleKey.Spacebar:
                             return selectedIndex;
 
                         case ConsoleKey.Escape:
