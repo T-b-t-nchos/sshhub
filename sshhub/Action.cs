@@ -179,6 +179,7 @@ namespace sshhub
                             selectedIndex = (selectedIndex + 1) % options.Length;
                             break;
                         case ConsoleKey.Enter:
+                        case ConsoleKey.Spacebar:
                             return selectedIndex;
 
                         case ConsoleKey.Escape:
