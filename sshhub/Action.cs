@@ -14,7 +14,6 @@ namespace sshhub
 
     public class Action
     {
-
         public class Ask
         {
             public static string? String(string prompt, bool checkEmpty)
@@ -581,6 +580,11 @@ namespace sshhub
                     $"ID: {t.id}, Name: {t.Name}, IP: {t.IP}, Port: {t.Port}, Username: {t.Username}, ScanOnline: {t.ScanOnline}"
                 );
             }
+        }
+
+        public static void ChangeConsoleTitle(string subtitle)
+        {
+            Console.Title = $"sshhub - {subtitle}";
         }
     }
 }

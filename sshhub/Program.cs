@@ -37,6 +37,7 @@ namespace sshhub
         static void ShowMenu()
         {
             Console.Clear();
+            ChangeConsoleTitle("Main Menu");
             Console.ForegroundColor = ConsoleColor.Green;
             HBar();
             Console.WriteLine("  SSH Hub (sshhub)");
@@ -75,6 +76,7 @@ namespace sshhub
 
         static void Connect()
         {
+            ChangeConsoleTitle("Connect");
             Console.Clear();
 
             TargetConfig? target = SelectTarget(Config, "Select Target to Connect", "\e[92m", true);
@@ -95,6 +97,7 @@ namespace sshhub
 
             Success($"Running ssh to {target.Username}@{target.IP}:{target.Port}");
             Info($"({exec})");
+            ChangeConsoleTitle($"{target.Username}@{target.IP}:{target.Port}");
 
             Console.WriteLine();
 
@@ -113,6 +116,7 @@ namespace sshhub
 
             Console.WriteLine();
 
+            ChangeConsoleTitle("Connect");
             Warning("SSH session ended");
             Info("Press any key to return to menu...");
             Console.ReadKey(true);
@@ -130,6 +134,7 @@ namespace sshhub
         static void ListTargets()
         {
             Console.Clear();
+            ChangeConsoleTitle("List Targets");
 
             Info("Select option (Press ESC to cancel)");
             Info("You can choose Up/Down Allow or Number 1or2");
@@ -172,6 +177,7 @@ namespace sshhub
         static void AddTarget()
         {
             Console.Clear();
+            ChangeConsoleTitle("Add Target");
 
             var newTarget = AddTargetConfig(
                 target: null,
@@ -201,6 +207,7 @@ namespace sshhub
         static void EditTarget()
         {
             Console.Clear();
+            ChangeConsoleTitle("Edit Target");
 
             TargetConfig? target = SelectTarget(Config, "Select Target to edit", "\e[93m", false);
             if (target == null)
@@ -232,6 +239,7 @@ namespace sshhub
         static void DeleteTarget()
         {
             Console.Clear();
+            ChangeConsoleTitle("Delete Target");
 
             TargetConfig? target = SelectTarget(Config, "Select Target to Delete", "\e[95m", false);
             if (target == null)
@@ -267,6 +275,8 @@ namespace sshhub
         static void EditExec()
         {
             Console.Clear();
+            ChangeConsoleTitle("Edit Execution Option");
+            
             Console.WriteLine("Parameter-List");
             Console.WriteLine("{$IP}\t\tConfigurated IP");
             Console.WriteLine("{$Port}\t\tConfigurated Port");
@@ -291,6 +301,7 @@ namespace sshhub
         static void ConfirmExit()
         {
             Console.Clear();
+            ChangeConsoleTitle("Exit?");
 
             if (Confirm("Exit"))
                 Environment.Exit(0);
