@@ -137,7 +137,7 @@ namespace sshhub
             ChangeConsoleTitle("List Targets");
 
             Info("Select option (Press ESC to cancel)");
-            Info("You can choose Up/Down Allow or Number 1or2");
+            Info("You can choose Up/Down (or j/k) Allow or Number 1or2");
 
             string[] menuItems =
             [

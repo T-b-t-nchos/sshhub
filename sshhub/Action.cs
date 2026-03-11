@@ -146,7 +146,7 @@ namespace sshhub
             /// <summary>
             /// Displays a selectable menu in the console and allows the user to choose an option using the keyboard.
             /// </summary>
-            /// <remarks>The menu allows navigation using the Up and Down arrow keys. Pressing Enter or Spacekey
+            /// <remarks>The menu allows navigation using the Up and Down arrow or j/k keys. Pressing Enter or Spacekey
             /// selects the currently highlighted option. If numeric shortcuts are enabled, pressing a number key (1–9)
             /// selects the corresponding option directly. The method blocks until the user makes a selection or
             /// cancels.</remarks>
@@ -173,9 +173,11 @@ namespace sshhub
                     switch (key)
                     {
                         case ConsoleKey.UpArrow:
+                        case ConsoleKey.K:
                             selectedIndex = (selectedIndex - 1 + options.Length) % options.Length;
                             break;
                         case ConsoleKey.DownArrow:
+                        case ConsoleKey.J:
                             selectedIndex = (selectedIndex + 1) % options.Length;
                             break;
                         case ConsoleKey.Enter:
@@ -255,7 +257,7 @@ namespace sshhub
                 Console.Clear();
 
                 WriteLine.Info($"{infoMsg} (Press ESC to cancel)");
-                WriteLine.Info("You can choose Up/Down Allow or Number 1to9");
+                WriteLine.Info("You can choose Up/Down (or j/k) Allow or Number 1to9");
 
                 if (config.Targets.Length == 0)
                 {
@@ -356,7 +358,7 @@ namespace sshhub
                     Console.Clear();
 
                     WriteLine.Info("Select edit option (Press ESC to cancel)");
-                    WriteLine.Info("You can choose Up/Down Allow or Number 1to9");
+                    WriteLine.Info("You can choose Up/Down (or j/k) Allow or Number 1to9");
 
                     string[] menuItems =
                     [
