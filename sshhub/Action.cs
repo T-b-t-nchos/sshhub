@@ -185,6 +185,7 @@ namespace sshhub
                             return selectedIndex;
 
                         case ConsoleKey.Escape:
+                        case ConsoleKey.Q:
                             return -1;
 
                         case ConsoleKey.D1 when enableshotcut: return 0;
