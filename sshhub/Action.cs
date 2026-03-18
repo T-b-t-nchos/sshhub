@@ -137,7 +137,7 @@ namespace sshhub
                 Console.Write("y=Yes / Other=Cancel >> ");
 
                 ConsoleKeyInfo input = Console.ReadKey();
-                if (input != null && input.Key == ConsoleKey.Y)
+                if (input.Key == ConsoleKey.Y)
                     return true;
 
                 return false;
