@@ -14,7 +14,6 @@ namespace sshhub
 
     public class Action
     {
-
         public class Ask
         {
             public static string? String(string prompt, bool checkEmpty)
@@ -137,8 +136,8 @@ namespace sshhub
                 Warning($"{msg}, Confirm?");
                 Console.Write("y=Yes / Other=Cancel >> ");
 
-                var input = Console.ReadLine();
-                if (input != null && input.Equals("y", StringComparison.CurrentCultureIgnoreCase))
+                ConsoleKeyInfo input = Console.ReadKey();
+                if (input.Key == ConsoleKey.Y)
                     return true;
 
                 return false;
@@ -147,7 +146,7 @@ namespace sshhub
             /// <summary>
             /// Displays a selectable menu in the console and allows the user to choose an option using the keyboard.
             /// </summary>
-            /// <remarks>The menu allows navigation using the Up and Down arrow keys. Pressing Enter
+            /// <remarks>The menu allows navigation using the Up and Down arrow or j/k keys. Pressing Enter or Spacekey
             /// selects the currently highlighted option. If numeric shortcuts are enabled, pressing a number key (1–9)
             /// selects the corresponding option directly. The method blocks until the user makes a selection or
             /// cancels.</remarks>
@@ -155,7 +154,7 @@ namespace sshhub
             /// item.</param>
             /// <param name="top">The zero-based row position in the console at which to display the menu.</param>
             /// <param name="enableshotcut">true to enable numeric shortcut keys (1–9) for direct selection of menu options; otherwise, false.</param>
-            /// <returns>The zero-based index of the selected option, or -1 if the user presses the Escape key to cancel the
+            /// <returns>The zero-based index of the selected option, or -1 if the user presses the Escape key or "Q" key to cancel the
             /// selection.</returns>
             public static int SelectableMenu(string[] options, int top, bool enableshotcut)
             {
@@ -174,15 +173,19 @@ namespace sshhub
                     switch (key)
                     {
                         case ConsoleKey.UpArrow:
+                        case ConsoleKey.K:
                             selectedIndex = (selectedIndex - 1 + options.Length) % options.Length;
                             break;
                         case ConsoleKey.DownArrow:
+                        case ConsoleKey.J:
                             selectedIndex = (selectedIndex + 1) % options.Length;
                             break;
                         case ConsoleKey.Enter:
+                        case ConsoleKey.Spacebar:
                             return selectedIndex;
 
                         case ConsoleKey.Escape:
+                        case ConsoleKey.Q:
                             return -1;
 
                         case ConsoleKey.D1 when enableshotcut: return 0;
@@ -254,8 +257,8 @@ namespace sshhub
             {
                 Console.Clear();
 
-                WriteLine.Info($"{infoMsg} (Press ESC to cancel)");
-                WriteLine.Info("You can choose Up/Down Allow or Number 1to9");
+                WriteLine.Info($"{infoMsg} (Press ESC or q to cancel)");
+                WriteLine.Info("You can choose Up/Down (or j/k) Allow or Number 1to9");
 
                 if (config.Targets.Length == 0)
                 {
@@ -355,8 +358,8 @@ namespace sshhub
                 {
                     Console.Clear();
 
-                    WriteLine.Info("Select edit option (Press ESC to cancel)");
-                    WriteLine.Info("You can choose Up/Down Allow or Number 1to9");
+                    WriteLine.Info("Select edit option (Press ESC or q to cancel)");
+                    WriteLine.Info("You can choose Up/Down (or j/k) Allow or Number 1to9");
 
                     string[] menuItems =
                     [
@@ -581,6 +584,11 @@ namespace sshhub
                     $"ID: {t.id}, Name: {t.Name}, IP: {t.IP}, Port: {t.Port}, Username: {t.Username}, ScanOnline: {t.ScanOnline}"
                 );
             }
+        }
+
+        public static void ChangeConsoleTitle(string subtitle)
+        {
+            Console.Title = $"sshhub - {subtitle}";
         }
     }
 }
