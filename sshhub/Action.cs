@@ -136,8 +136,8 @@ namespace sshhub
                 Warning($"{msg}, Confirm?");
                 Console.Write("y=Yes / Other=Cancel >> ");
 
-                var input = Console.ReadLine();
-                if (input != null && input.Equals("y", StringComparison.CurrentCultureIgnoreCase))
+                ConsoleKeyInfo input = Console.ReadKey();
+                if (input != null && input.Key == ConsoleKey.Y)
                     return true;
 
                 return false;
