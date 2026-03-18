@@ -154,7 +154,7 @@ namespace sshhub
             /// item.</param>
             /// <param name="top">The zero-based row position in the console at which to display the menu.</param>
             /// <param name="enableshotcut">true to enable numeric shortcut keys (1–9) for direct selection of menu options; otherwise, false.</param>
-            /// <returns>The zero-based index of the selected option, or -1 if the user presses the Escape key to cancel the
+            /// <returns>The zero-based index of the selected option, or -1 if the user presses the Escape key or "Q" key to cancel the
             /// selection.</returns>
             public static int SelectableMenu(string[] options, int top, bool enableshotcut)
             {
@@ -257,7 +257,7 @@ namespace sshhub
             {
                 Console.Clear();
 
-                WriteLine.Info($"{infoMsg} (Press ESC to cancel)");
+                WriteLine.Info($"{infoMsg} (Press ESC or q to cancel)");
                 WriteLine.Info("You can choose Up/Down (or j/k) Allow or Number 1to9");
 
                 if (config.Targets.Length == 0)
@@ -358,7 +358,7 @@ namespace sshhub
                 {
                     Console.Clear();
 
-                    WriteLine.Info("Select edit option (Press ESC to cancel)");
+                    WriteLine.Info("Select edit option (Press ESC or q to cancel)");
                     WriteLine.Info("You can choose Up/Down (or j/k) Allow or Number 1to9");
 
                     string[] menuItems =
