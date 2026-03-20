@@ -228,23 +228,3 @@ fix/cant-skip-config-when-edit-target
 
 <sub>Please see `.github/workflows/release.yml`.</sub><br>
 `.github/workflows/release.yml`を御覧ください。<br>
-
-## Update History
-
-- v0.0 2026/01/10 T-b-t-nchos 初版
-- v0.1 2026/01/18 T-b-t-nchos コミットメッセージの記述の`<type>`と`(<scope>)`の間に` `を追加
-- v0.2 2026/01/24 T-b-t-nchos ブランチ名の規則で、Issueが存在する際の扱いを変更(明記)
-- v0.3 2026/03/11 T-b-t-nchos 検証環境を更新
-- v0.4 2026/03/21 T-b-t-nchos 任意/推奨の括弧の有無を統一, `<type>`などに,"`"を追加
-- v0.5 2026/03/21 T-b-t-nchos Markdown-Document化に向けて準備。(変更が多岐にわたるため、内容は省略。)
-- v1.0 2026/03/21 T-b-t-nchos CONTRIBUTING.mdへ移動
-
-<br>
-
-- v0.0 2026/01/10 T-b-t-nchos Initial version
-- v0.1 2026/01/18 T-b-t-nchos Added ` ` between `<type>` and `(<scope>)` in commit message description
-- v0.2 2026/01/24 T-b-t-nchos Changed handling when Issue exists in branch name rules (specified)
-- v0.3 2026/03/11 T-b-t-nchos Updated verification environment
-- v0.4 2026/03/21 T-b-t-nchos Unified presence/absence of parentheses for optional/recommended, added `"` to `<type>`, etc.
-- v0.5 2026/03/21 T-b-t-nchos Preparation for Markdown-based documentation. (It has so many changes, so details omitted)
-- v1.0 2026/03/21 T-b-t-nchos Move to CONTRIBUTING.md
