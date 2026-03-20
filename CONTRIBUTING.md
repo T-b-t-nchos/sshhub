@@ -237,7 +237,7 @@ fix/cant-skip-config-when-edit-target
 - v0.3 2026/03/11 T-b-t-nchos 検証環境を更新
 - v0.4 2026/03/21 T-b-t-nchos 任意/推奨の括弧の有無を統一, `<type>`などに,"`"を追加
 - v0.5 2026/03/21 T-b-t-nchos Markdown-Document化に向けて準備。(変更が多岐にわたるため、内容は省略。)
-- v1.0 2026/03/21 T-b-t-nchos CONTRIBUTE.mdへ移動
+- v1.0 2026/03/21 T-b-t-nchos CONTRIBUTING.mdへ移動
 
 <br>
 
@@ -247,4 +247,4 @@ fix/cant-skip-config-when-edit-target
 - v0.3 2026/03/11 T-b-t-nchos Updated verification environment
 - v0.4 2026/03/21 T-b-t-nchos Unified presence/absence of parentheses for optional/recommended, added `"` to `<type>`, etc.
 - v0.5 2026/03/21 T-b-t-nchos Preparation for Markdown-based documentation. (It has so many changes, so details omitted)
-- v1.0 2026/03/21 T-b-t-nchos Move to CONTRIBUTE.md
+- v1.0 2026/03/21 T-b-t-nchos Move to CONTRIBUTING.md
