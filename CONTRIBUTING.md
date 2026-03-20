@@ -6,6 +6,20 @@ CONTRIBUTING GUIDELINE<br>
 > <sub>Used AI for some translations.</sub><br>
 > 一部の翻訳にはAIを使用しています。
 
+## flowchart
+```mermaid
+flowchart TD
+    H1(commit) --> G1
+    G1(commit) --> F1
+    F1[feat/xxxx] --> D[develop]
+    G2(commit) --> F2
+    F2[fix/xxxx] --> D
+    G3(commit) --> F3
+    F3[docs/xxxx] --> D
+    F4(hotfix or little commit) --> D
+    D --> M[main]
+```
+
 ## Issue/Discussions
 
 <sub>We accept feature proposals, bug reports, and feature ideas in Issues.</sub><br>
