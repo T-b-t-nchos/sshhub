@@ -33,13 +33,11 @@ Discussionsでは、主に質問などを受け付けます。<br>
 
 - 大規模/中規模程度の機能追加 (例: 新たなConfig追加が必要な機能 / 新しいメニューが追加される など)
 - UIの大幅な刷新
-- 
 
 <br>
 
 - Medium to large-scale feature additions (e.g., features requiring new Config / new menu additions, etc.)
 - Major UI refreshes
-- 
 
 <sub>Branch names will be mentioned later.</sub><br>
 ブランチ名については後ほど後述します。<br>
@@ -69,7 +67,6 @@ Discussionsでは、主に質問などを受け付けます。<br>
 - `ci`       GitHub Actionsなどのワークフローの変更
 - `typo`     タイプミスの修正
 - `revert`   `git revert` などを使用した際のコミット
-- 
 
 <br>
 
@@ -82,7 +79,6 @@ Discussionsでは、主に質問などを受け付けます。<br>
 - `ci`       Changes to workflows such as GitHub Actions
 - `typo`     Typo corrections
 - `revert`   Commits using `git revert`, etc.
-- 
 
 ### `<scope>` **(Optional)**
 
