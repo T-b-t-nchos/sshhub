@@ -241,5 +241,5 @@ fix/cant-skip-config-when-edit-target
 
 ## Release
 
-<sub>Please see `.github/workflows/release.yml`.</sub><br>
-`.github/workflows/release.yml`を御覧ください。<br>
+<sub>Please see `.github/workflows/publish-on-release.yml`.</sub><br>
+`.github/workflows/publish-on-release.yml`を御覧ください。<br>
