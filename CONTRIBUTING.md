@@ -18,6 +18,8 @@ flowchart TD
     F3[docs/xxxx] --> D
     F4(hotfix or little commit) --> D
     D --> M[master]
+    M --> R[Create GitHub Release]
+    R --> P[Publish workflow runs]
 ```
 
 ## Issue/Discussions
