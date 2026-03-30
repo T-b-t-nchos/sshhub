@@ -61,7 +61,7 @@ Discussionsでは、主に質問などを受け付けます。<br>
 <sub>Commit messages in this repository are described as follows. (from 2026/01/10)</sub><br>
 本リポジトリでのコミットメッセージは、下記のように記述します。(2026/01/10~)<br>
 
-```
+```text
 <type> (<scope>): <subject> (#<Issue Number>)
 
 <more info>
@@ -127,7 +127,7 @@ Discussionsでは、主に質問などを受け付けます。<br>
 省略しても構いません。<br>
 
 ### Example
-```
+```text
 feat: Add q keymap as exit (#36)
 fix: wrong variable in conditional check 
 ```
@@ -167,7 +167,7 @@ Commit Messageと概ね同様です。<br>
 Commit Messageと同様です。<br>
 
 ### Example
-```
+```text
 feat/Add-q-keymap-as-exit-#36
 fix/cant-skip-config-when-edit-target
 ```
