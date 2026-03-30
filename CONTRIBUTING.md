@@ -17,7 +17,7 @@ flowchart TD
     G3(commit) --> F3
     F3[docs/xxxx] --> D
     F4(hotfix or little commit) --> D
-    D --> M[main]
+    D --> M[master]
 ```
 
 ## Issue/Discussions
