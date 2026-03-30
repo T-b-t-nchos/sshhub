@@ -72,7 +72,7 @@ jobs:
               exit 1
             fi
             
-            rm -rd bin/Release/ || true
+            rm -rd bin/Release/
 
             (
               cd bin
