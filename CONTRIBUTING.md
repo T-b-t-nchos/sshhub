@@ -161,7 +161,7 @@ Commit Messageと概ね同様です。<br>
 <sub>Use `-` for spaces.</sub><br>
 空白には`-`を使用してください。<br>
 
-### `<Issue Number>`
+### `<Issue Number>` (Optional)
 
 <sub>Same as Commit Message.</sub><br>
 Commit Messageと同様です。<br>
