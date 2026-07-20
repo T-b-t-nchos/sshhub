@@ -76,7 +76,7 @@ jobs:
 
             (
               cd bin
-              zip -r "../../publish/sshhub_${{ github.event.release.tag_name }}_${1}.zip" .
+              zip -r "../../publish/sshhub_${1}.zip" .
             )
 
             popd >/dev/null
