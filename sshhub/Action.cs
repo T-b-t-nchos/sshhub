@@ -569,7 +569,18 @@ namespace sshhub
 
                 string jsonText = File.ReadAllText(Program.CONFIGPATH);
 
-                return JsonSerializer.Deserialize(jsonText, ConfigJsonContext.Default.ConfigRoot) ?? new ConfigRoot();
+                var config = JsonSerializer.Deserialize(jsonText, ConfigJsonContext.Default.ConfigRoot) ?? new ConfigRoot();
+
+                // Migrate legacy Exec template that lacks {$Options} to the new default which includes {$Options}.
+                // Only migrate when the value exactly matches the known legacy default to avoid overwriting user-custom templates.
+                const string legacyExec = "ssh {$Username}@{$IP} -p {$Port}";
+                if (config.Exec != null && config.Exec.Trim().Equals(legacyExec, StringComparison.Ordinal))
+                {
+                    config.Exec = new ConfigRoot().Exec;
+                    File.WriteAllText(Program.CONFIGPATH, GetJsonFromConfig(config));
+                }
+
+                return config;
             }
 
             static string GetJsonFromConfig(ConfigRoot config)
