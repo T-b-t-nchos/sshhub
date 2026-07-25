@@ -338,6 +338,10 @@ namespace sshhub
                     return null;
                 target.ScanOnline = (bool)newScanOnline;
 
+                string? newOptions = ConfigAsk.Options(target, allTargets, true);
+                if (newOptions == null)
+                    return null;
+                target.Options = newOptions;
 
                 return target;
             }
@@ -369,8 +373,9 @@ namespace sshhub
                         "\e[93m" + "$ " + $"4. Port        ({newTarget.Port})",
                         "\e[93m" + "$ " + $"5. Username    ({newTarget.Username})",
                         "\e[93m" + "$ " + $"6. ScanOnline  ({newTarget.ScanOnline})",
-                        "\e[91m" + "$ " + "7. Cancel",
-                        "\e[92m" + "$ " + "8. Save/Exit"
+                        "\e[93m" + "$ " + $"7. Options     ({newTarget.Options})",
+                        "\e[91m" + "$ " + "8. Cancel",
+                        "\e[92m" + "$ " + "9. Save/Exit"
                     ];
 
                     int selected = WriteLine.SelectableMenu(menuItems, 2, true);
@@ -428,11 +433,19 @@ namespace sshhub
                                 break;
                             }
                         case 6:
+                            {
+                                string? newOptions = ConfigAsk.Options(newTarget, allTargets, false);
+                                if (newOptions == null)
+                                    break;
+                                newTarget.Options = newOptions;
+                                break;
+                            }
+                        case 7:
                         case -1:
                             {
                                 return null;
                             }
-                        case 7:
+                        case 8:
                             {
                                 return newTarget;
                             }
@@ -532,6 +545,20 @@ namespace sshhub
                     else
                         return newScanOnline;
                 }
+
+                internal static string? Options(TargetConfig target, TargetConfig[] allTargets, bool isNew)
+                {
+                    string? newOptions = Ask.String(
+                        isNew ? "Enter Target Options" : $"Current Options ({target.Options})",
+                        checkEmpty: false
+                    );
+                    if (newOptions == null)
+                        return null;
+                    else if (newOptions != string.Empty)
+                        return newOptions;
+                    else
+                        return target.Options;
+                }
             }
 
             public static ConfigRoot ReLoad()
@@ -581,7 +608,7 @@ namespace sshhub
             foreach (var t in targets)
             {
                 Console.WriteLine(
-                    $"ID: {t.id}, Name: {t.Name}, IP: {t.IP}, Port: {t.Port}, Username: {t.Username}, ScanOnline: {t.ScanOnline}"
+                    $"ID: {t.id}, Name: {t.Name}, IP: {t.IP}, Port: {t.Port}, Username: {t.Username}, ScanOnline: {t.ScanOnline}, Other options: {t.Options}"
                 );
             }
         }

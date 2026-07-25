@@ -89,7 +89,8 @@ namespace sshhub
             string exec = Config.Exec
                 .Replace("{$IP}", target.IP)
                 .Replace("{$Port}", target.Port.ToString())
-                .Replace("{$Username}", target.Username);
+                .Replace("{$Username}", target.Username)
+                .Replace("{$Options}", target.Options);
 
             var parts = exec.Split(' ', 2, StringSplitOptions.RemoveEmptyEntries);
 
@@ -281,6 +282,7 @@ namespace sshhub
             Console.WriteLine("{$IP}\t\tConfigurated IP");
             Console.WriteLine("{$Port}\t\tConfigurated Port");
             Console.WriteLine("{$Username}\tConfigurated Username");
+            Console.WriteLine("{$Options}\tConfigurated other Options");
 
             string? input = Ask.String($"Current Exec ({Config.Exec})", checkEmpty: true);
 

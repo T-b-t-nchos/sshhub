@@ -2,7 +2,7 @@
 {
     public class ConfigRoot
     {
-        public string Exec { get; set; } = "ssh {$Username}@{$IP} -p {$Port}";
+        public string Exec { get; set; } = "ssh {$Username}@{$IP} -p {$Port} {$Options}";
         public TargetConfig[] Targets { get; set; } = [];
     }
 
@@ -15,5 +15,6 @@
         public int Port { get; set; } = 22;
         public string Username { get; set; } = string.Empty;
         public bool ScanOnline { get; set; } = false;
+        public string Options { get; set; } = string.Empty;
     }
 }
