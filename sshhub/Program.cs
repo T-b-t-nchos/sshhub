@@ -271,7 +271,7 @@ namespace sshhub
         /// Prompt the user to edit the command template used to launch SSH and persist the updated template to the application configuration.
         /// </summary>
         /// <remarks>
-        /// Supported placeholders: {@code {$IP}}, {@code {$Port}}, {@code {$Username}}. If the user cancels the prompt (provides no input), the configuration is not changed and the method returns to the main menu.
+        /// Supported placeholders: {@code {$IP}}, {@code {$Port}}, {@code {$Username}}, {@code {$Options}}. If the user cancels the prompt (provides no input), the configuration is not changed and the method returns to the main menu.
         /// </remarks>
         static void EditExec()
         {
@@ -282,7 +282,7 @@ namespace sshhub
             Console.WriteLine("{$IP}\t\tConfigurated IP");
             Console.WriteLine("{$Port}\t\tConfigurated Port");
             Console.WriteLine("{$Username}\tConfigurated Username");
-            Console.WriteLine("{$Options}\tConfigurated other Options");
+            Console.WriteLine("{$Options}\tConfigured other options");
 
             string? input = Ask.String($"Current Exec ({Config.Exec})", checkEmpty: true);
 
