@@ -355,7 +355,8 @@ namespace sshhub
                     IP = target.IP,
                     Port = target.Port,
                     Username = target.Username,
-                    ScanOnline = target.ScanOnline
+                    ScanOnline = target.ScanOnline,
+                    Options = target.Options
                 };
 
                 while (true)
