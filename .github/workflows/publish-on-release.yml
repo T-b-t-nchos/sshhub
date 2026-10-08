@@ -1,15 +1,32 @@
-﻿name: 💡 | Publish sshhub
+﻿name: 💡 | Publish
 
 on:
   release:
     types:
       - created
 
+env:
+  PROJECT_NAME: sshhub
+  PUBLISH_TRIMMED: true
+
 jobs:
   publish:
     runs-on: ubuntu-latest
     permissions:
       contents: write
+
+    strategy:
+      fail-fast: false
+      matrix:
+        runtime:
+          - win-x64
+          - win-x86
+          - win-arm64
+          - linux-x64
+          - linux-arm
+          - linux-arm64
+          - osx-x64
+          - osx-arm64
 
     steps:
       - name: Checkout repository
@@ -32,67 +49,54 @@ jobs:
       - name: Restore
         run: dotnet restore
 
-      - name: Prepare publish directory
-        run: |
-          rm -rf publish
-          mkdir -p publish
-
-      - name: Publish all runtimes
+      - name: Publish
         shell: bash
+        env:
+          RUNTIME: ${{ matrix.runtime }}
         run: |
           set -e
 
-          RP () {
-            echo "=== Publishing $1 ==="
+          echo "=== Publishing $PROJECT_NAME for $RUNTIME ==="
 
-            pushd sshhub >/dev/null
+          pushd "$PROJECT_NAME" >/dev/null
 
-            rm -rf bin
-            mkdir -p bin
-            
-            if [[ "$1" != osx-* ]]; then
-              extra_flags="-p:PublishReadyToRun=true"
-            else
-              extra_flags=""
-            fi
+          rm -rf bin
+          mkdir -p bin
 
-            dotnet publish -c Release -r "$1" -f net10.0 \
-              --self-contained true \
-              -p:PublishTrimmed=true \
-              -p:AssemblyName=sshhub \
-              -p:PublishSingleFile=true \
-              $extra_flags \
-              -p:PublishDir=bin
+          if [[ "$RUNTIME" != osx-* ]]; then
+            extra_flags="-p:PublishReadyToRun=true"
+          else
+            extra_flags=""
+          fi
 
-            echo "--- bin contents ($1) ---"
-            ls -la bin
+          dotnet publish -c Release -r "$RUNTIME" -f net10.0 \
+            --self-contained true \
+            -p:PublishTrimmed="$PUBLISH_TRIMMED" \
+            -p:AssemblyName="$PROJECT_NAME" \
+            -p:PublishSingleFile=true \
+            $extra_flags \
+            -p:PublishDir=bin
 
-            if [ -z "$(ls -A bin)" ]; then
-              echo "bin is empty for $1"
-              exit 1
-            fi
-            
-            rm -rd bin/Release/
+          echo "--- bin contents ($RUNTIME) ---"
+          ls -la bin
 
-            (
-              cd bin
-              zip -r "../../publish/sshhub_${1}.zip" .
-            )
+          if [ -z "$(ls -A bin)" ]; then
+            echo "bin is empty for $RUNTIME"
+            exit 1
+          fi
 
-            popd >/dev/null
-          }
+          rm -rd bin/Release/
 
-          RP win-x64
-          RP win-x86
-          RP win-arm64
-          RP linux-x64
-          RP linux-arm
-          RP linux-arm64
-          RP osx-x64
-          RP osx-arm64
+          cd bin
+          zip -r "../../${PROJECT_NAME}_${RUNTIME}.zip" .
 
-      - name: Upload assets to Release (on release)
+          popd >/dev/null
+
+          echo "--- Published artifact ---"
+          ls -lh "${PROJECT_NAME}_${RUNTIME}.zip"
+
+      - name: Upload asset to Release
         if: github.event_name == 'release'
         uses: softprops/action-gh-release@v2
         with:
-          files: publish/*
+          files: ${{ env.PROJECT_NAME }}_${{ matrix.runtime }}.zip
